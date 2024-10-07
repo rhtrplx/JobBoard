@@ -20,9 +20,10 @@ services:
     environment:
       FLASK_APP: app.py
       FLASK_RUN_HOST: 0.0.0.0
-    command: sh -c "pip install -r requirements.txt && flask run --host=0.0.0.0 --port=5001"
+    command: sh -c "pip install -r requirements.txt && python3.9 /app/app.py"
     depends_on:
       - db #this line links this container to the db container
+
   db:
     image: mysql #check the mysql version you need for your project
     environment:
