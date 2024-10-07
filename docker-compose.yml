@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  react:
+    image: node:18
+    working_dir: /app
+    ports:
+      - "3000:3000" # Port d'exposition pour le serveur de développement React
+    volumes:
+      - ./front:/app # Monte le dossier ./frontend à l'intérieur du conteneur
+      - /app/node_modules # Empêche les conflits de permissions sur node_modules
+    command: sh -c "npm install && npm start"
+
+  flask:
+    image: python:3.9
+    working_dir: /app
+    ports:
+      - "5001:5001" # Port d'exposition pour le backend Flask
+    volumes:
+      - ./back:/app # Monte le dossier ./backend à l'intérieur du conteneur
+    environment:
+      FLASK_APP: app.py
+      FLASK_RUN_HOST: 0.0.0.0
+    command: sh -c "pip install -r requirements.txt && flask run --host=0.0.0.0 --port=5001"
+    depends_on:
+      - db #this line links this container to the db container
+  db:
+    image: mysql #check the mysql version you need for your project
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password #you can change the mysql root password here
+      MYSQL_DATABASE: lamp_db #you can change the database name here
+    volumes:
+      - ./back/mysql_data:/var/lib/mysql #this line maps the content of ./mysql_data in your pc to the /var/lib/mysql of the container
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80" #this line maps your pc port to the container port
+    depends_on:
+      - db #this line links this container to the db container
+    environment:
+      PMA_HOST: db
