@@ -3,10 +3,10 @@ import logo from "../assets/Logo.png";
 import SubmitButton from '../components/SubmitButton';
 import CreateButton from '../components/CreateButton';
 
-function App() {
+function FrontPage() {
 
   return (
-    <div className="App">
+    <div>
       {/* Navbar with Logo */}
       <nav className="navbar navbar-expand-lg">
         <div className="container d-flex justify-content-center align-items-center">
@@ -32,9 +32,9 @@ function App() {
             <label className="form-check-label" htmlFor="exampleCheck1">Keep me signed-in</label>
           </div>
 
-          <SubmitButton handleSubmit="/login"/>
+          <SubmitButton handleSubmit="/login" email="" password="" />
           <br/> <br/>
-          <CreateButton handleSubmit="/create"/>
+          <CreateButton handleSubmit="/create"/> NAVIGATE FUNCTION
           
         </form>
       </div>
@@ -42,4 +42,4 @@ function App() {
   );
 }
 
-export default App;
+export default FrontPage;
