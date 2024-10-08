@@ -1,17 +1,12 @@
 import React from 'react';
-import logo from './assets/Logo.png';
-import './App.css';
+import logo from "../assets/Logo.png";
+import SubmitButton from '../components/SubmitButton';
+import CreateButton from '../components/CreateButton';
 
-function App() {
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log("Form submitted!");
-  }
-
+function FrontPage() {
 
   return (
-    <div className="App">
+    <div>
       {/* Navbar with Logo */}
       <nav className="navbar navbar-expand-lg">
         <div className="container d-flex justify-content-center align-items-center">
@@ -36,11 +31,15 @@ function App() {
             <input type="checkbox" className="form-check-input" id="exampleCheck1" />
             <label className="form-check-label" htmlFor="exampleCheck1">Keep me signed-in</label>
           </div>
-          <button type="submit" className="btn" style={{ backgroundColor: '#1178be', color: 'white' }}>Submit</button>
+
+          <SubmitButton handleSubmit="/login" email="" password="" />
+          <br/> <br/>
+          <CreateButton handleSubmit="/create"/> NAVIGATE FUNCTION
+          
         </form>
       </div>
     </div>
   );
 }
 
-export default App;
+export default FrontPage;
