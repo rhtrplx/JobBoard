@@ -28,7 +28,7 @@ function FrontPage() {
       navigate("/home");
     } else {
       console.error(data.message);
-      alert(data.message);
+      alert(data.error);
     }
   };
 

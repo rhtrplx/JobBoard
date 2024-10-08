@@ -1,0 +1,52 @@
+.card-body {
+    transition: all 3000s ease;
+  }
+  
+.card-body p {
+font-size: 14px;
+color: #333;
+}
+
+.card-body a {
+font-weight: bold;
+}
+
+#filtersubmitbutton{
+    margin: 5px;
+}
+
+.filterbutton{
+    background-color: #1178be;
+    margin: 5px;
+    border-radius: 5px;
+    color: white;
+}
+
+.btn-primary{
+    background-color: #1178be;
+}
+
+.HeaderContainer {
+    display: flex;
+    justify-content: center; 
+    align-items: flex-start;
+    position: relative;
+    padding: 20px;
+}
+
+.ProfileLogo {
+    position: absolute;
+    top: 50px;
+    right: 50px;
+
+}
+
+.profile_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
+}
+
+
+
