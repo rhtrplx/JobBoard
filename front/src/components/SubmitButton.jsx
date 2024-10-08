@@ -1,11 +1,9 @@
 import React from "react";
 
-
-function SubmitButton({handleSubmit, email, password}) {
-
+function SubmitButton({handleSubmit}) {
     return(
-    <button type="submit" className="btn" style={{ backgroundColor: '#1178be', color: 'white' }} onClick={handleSubmit}>
-    Submit
+    <button type="submit" className="btn" style={{ backgroundColor: '#1178be', color: 'white' }}>
+    Log in
     </button>
     );
 }

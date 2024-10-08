@@ -1,9 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';  //declare state variables and update them
 import logo from "../assets/Logo.png";
 import SubmitButton from '../components/SubmitButton';
 import CreateButton from '../components/CreateButton';
+import { useNavigate } from 'react-router-dom';
 
 function FrontPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Make a POST request to the Flask API
+    const response = await fetch("http://localhost:5001/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ "email" : email, "password": password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log(data.message);
+      navigate("/home");
+    } else {
+      console.error(data.message);
+      alert(data.message);
+    }
+  };
 
   return (
     <div>
@@ -18,24 +45,37 @@ function FrontPage() {
 
       {/* Form */}
       <div className="d-flex justify-content-center align-items-top min-vh-100">
-        <form className="w-50">
+        <form className="w-50" onSubmit={handleSubmit}> {/* Add onSubmit here */}
           <div className="mb-3">
             <label htmlFor="InputEmail1" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="InputEmail1" />
+            <input 
+              type="email" 
+              className="form-control" 
+              id="InputEmail1" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} // Corrected onChange
+            />
           </div>
+
           <div className="mb-3">
             <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-            <input type="password" className="form-control" id="exampleInputPassword1" />
+            <input 
+              type="password" 
+              className="form-control" 
+              id="exampleInputPassword1" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} // Added onChange for password
+            />
           </div>
+
           <div className="mb-3 form-check">
             <input type="checkbox" className="form-check-input" id="exampleCheck1" />
             <label className="form-check-label" htmlFor="exampleCheck1">Keep me signed-in</label>
           </div>
 
-          <SubmitButton handleSubmit="/login" email="" password="" />
-          <br/> <br/>
-          <CreateButton handleSubmit="/create"/> NAVIGATE FUNCTION
-          
+          <SubmitButton handleSubmit={handleSubmit} /> {/* Removed email and password props */}
+          <br /> <br />
+          <CreateButton />
         </form>
       </div>
     </div>

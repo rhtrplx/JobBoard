@@ -1,27 +1,50 @@
 import React from 'react';
+import logo from "../assets/Logo.png";
+import SubmitButton from '../components/SubmitButton';
+import CreateButton from '../components/CreateButton';
 
-function CreateAccount() {
+function FrontPage() {
+
   return (
-    <div className="container">
-      <h1>Create an Account</h1>
-      {}
-      <form>
-        <div className="mb-3">
-          <label htmlFor="InputUsername" className="form-label">Username</label>
-          <input type="text" className="form-control" id="InputUsername" />
+    <div>
+      {/* Navbar with Logo */}
+      <nav className="navbar navbar-expand-lg">
+        <div className="container d-flex justify-content-center align-items-center">
+          <a className="navbar-brand" href="#">
+            <img src={logo} alt="Logo" width="120" height="120" />
+          </a>
         </div>
-        <div className="mb-3">
-          <label htmlFor="InputEmail1" className="form-label">Email address</label>
-          <input type="email" className="form-control" id="InputEmail1" />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="InputPassword1" className="form-label">Password</label>
-          <input type="password" className="form-control" id="InputPassword1" />
-        </div>
-        <button type="submit" className="btn btn-primary">Submit</button>
-      </form>
+      </nav>
+
+      {/* Form */}
+      <div className="d-flex justify-content-center align-items-top min-vh-100">
+        <form className="w-50">
+          <div className="mb-3">
+            <label htmlFor="InputEmail1" className="form-label">Email address</label>
+            <input type="email" className="form-control" id="InputEmail1" />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
+            <input type="password" className="form-control" id="exampleInputPassword1" />
+          </div>
+          <div className="mb-3">
+            <label htmlFor="exampleInputPassword1" className="form-label">Confirm Password</label>
+            <input type="password" className="form-control" id="exampleInputPassword1" />
+          </div>
+
+
+          <div className="mb-3 form-check">
+            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+            <label className="form-check-label" htmlFor="exampleCheck1">Keep me signed-in</label>
+          </div>
+
+          <SubmitButton email="" password="" />
+          <br/> <br/>
+          
+        </form>
+      </div>
     </div>
   );
 }
 
-export default CreateAccount;
+export default FrontPage;

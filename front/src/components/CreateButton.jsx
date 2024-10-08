@@ -1,10 +1,16 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 
 
-function CreateButton({handleCreate}) {
+function CreateButton() {
+    const navigate = useNavigate();
+
+    const handleCreate = () => {
+        navigate("/create");
+    };
 
     return(
-    <button type="submit" className="btn" style={{ backgroundColor: '#1178be', color: 'white' }} onClick>
+    <button type="button" className="btn" style={{ backgroundColor: '#1178be', color: 'white' }} onClick={handleCreate}>
     Create an Account
     </button>
     );
