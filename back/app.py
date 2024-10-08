@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, abort
+from flask_cors import CORS
 import mysql.connector, time
 
 # Connexion à la base de données MySQL définie dans Docker Compose
@@ -14,6 +15,7 @@ cnx = mysql.connector.connect(
 )
 
 app = Flask(__name__)
+CORS(app)  # Permettre toutes les origines par défaut
 
 
 @app.route("/api/login", methods=["POST"])
