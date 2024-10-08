@@ -1,17 +1,9 @@
 import React from 'react';
-import logo from './assets/Logo.png';
-import { BrowserRouter, Routes, Route} from 'react-router-dom'
-import CreateAccount from './pages/CreateAccount';
-
-
+import logo from "../assets/Logo.png";
+import SubmitButton from '../components/SubmitButton';
+import CreateButton from '../components/CreateButton';
 
 function App() {
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    console.log("Form submitted!");
-  }
-
 
   return (
     <div className="App">
@@ -39,7 +31,11 @@ function App() {
             <input type="checkbox" className="form-check-input" id="exampleCheck1" />
             <label className="form-check-label" htmlFor="exampleCheck1">Keep me signed-in</label>
           </div>
-          <button type="submit" className="btn" style={{ backgroundColor: '#1178be', color: 'white' }}>Submit</button>
+
+          <SubmitButton handleSubmit="/login"/>
+          <br/> <br/>
+          <CreateButton handleSubmit="/create"/>
+          
         </form>
       </div>
     </div>
