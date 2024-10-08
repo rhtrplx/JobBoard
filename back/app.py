@@ -28,7 +28,7 @@ def login_handler():
 
     # Vérifier que les informations sont présentes
     if not email or not password:
-        return jsonify({"error": "Email et mot de passe requis"}), 400
+        return jsonify({"error": "You must enter an email and a password."}), 400
 
     # Requête SQL pour vérifier les informations d'identification
     query = "SELECT * FROM users WHERE email = %s AND password = %s"
@@ -38,9 +38,9 @@ def login_handler():
 
     # Si l'utilisateur existe, retourner un message de succès
     if user:
-        return jsonify({"message": "Connexion réussie", "user": user}), 200
+        return jsonify({"message": "Success Login", "user": user}), 200
     else:
-        return jsonify({"error": "Email ou mot de passe incorrect"}), 401
+        return jsonify({"error": "Email or Password incorrect."}), 401
 
 
 @app.route("/api/signup", methods=["POST"])
@@ -52,7 +52,7 @@ def signup_handler():
 
     # Vérifier que les informations sont présentes
     if not email or not password:
-        return jsonify({"error": "Email et mot de passe requis"}), 400
+        return jsonify({"error": "You must enter an email and a password."}), 400
 
     # Vérifier si l'utilisateur existe déjà dans la base de données
     check_query = "SELECT * FROM users WHERE email = %s"
@@ -61,18 +61,18 @@ def signup_handler():
     existing_user = cursor.fetchone()
 
     if existing_user:
-        return jsonify({"error": "L'utilisateur avec cet email existe déjà"}), 409
+        return jsonify({"error": "This email is alread used."}), 409
 
     # Insérer le nouvel utilisateur dans la base de données
     insert_query = "INSERT INTO users (email, password) VALUES (%s, %s)"
     try:
         cursor.execute(insert_query, (email, password))
         cnx.commit()  # Confirmer l'insertion
-        return jsonify({"message": "Inscription réussie !"}), 201
+        return jsonify({"message": "Sucess Signup !"}), 201
     except mysql.connector.Error as err:
-        print(f"Erreur d'insertion dans la base de données : {err}")
+        print(f"An error occured while accessing the DB : {err}")
         cnx.rollback()  # Annuler l'insertion si une erreur survient
-        return jsonify({"error": "Une erreur est survenue lors de l'inscription"}), 500
+        return jsonify({"error": "An error occured on Signup."}), 500
     finally:
         cursor.close()
 
