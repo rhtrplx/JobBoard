@@ -31,6 +31,9 @@ services:
       MYSQL_DATABASE: lamp_db #you can change the database name here
     volumes:
       - ./back/mysql_data:/var/lib/mysql #this line maps the content of ./mysql_data in your pc to the /var/lib/mysql of the container
+    ports:
+      - "3306:3306" # Expose le port MySQL pour une connexion externe
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     ports:
