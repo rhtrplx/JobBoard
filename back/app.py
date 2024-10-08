@@ -9,7 +9,7 @@ time.sleep(5)
 cnx = mysql.connector.connect(
     user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
     password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-    host="127.0.0.1",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+    host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
     database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
     use_pure=False,
 )
