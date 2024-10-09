@@ -4,12 +4,12 @@ import mysql.connector, time
 
 # Connexion à la base de données MySQL définie dans Docker Compose
 
-time.sleep(5)
+# time.sleep(5)
 
 cnx = mysql.connector.connect(
     user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
     password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-    host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+    host="127.0.0.1",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
     database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
     use_pure=False,
 )
@@ -86,7 +86,7 @@ def signup_handler():
 def ads_handler():
     # Récupérer les données envoyées depuis React
     data = request.json
-    page = data.get("page", 0)  # Défaut à 0 si "page" n'est pas fourni
+    page = data["page"]  # Défaut à 0 si "page" n'est pas fourni
     try:
         page = int(page)
     except:
