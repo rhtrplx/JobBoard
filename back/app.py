@@ -4,7 +4,7 @@ import mysql.connector, time
 
 # Connexion à la base de données MySQL définie dans Docker Compose
 
-# time.sleep(5)
+time.sleep(5)
 
 cnx = mysql.connector.connect(
     user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
