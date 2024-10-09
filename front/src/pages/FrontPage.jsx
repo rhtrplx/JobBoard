@@ -1,8 +1,8 @@
-import React, { useState } from 'react';  //declare state variables and update them
 import logo from "../assets/Logo.png";
 import SubmitButton from '../components/SubmitButton';
 import CreateButton from '../components/CreateButton';
 import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
 function FrontPage() {
   const [email, setEmail] = useState("");
