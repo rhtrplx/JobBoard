@@ -16,6 +16,7 @@ cnx = mysql.connector.connect(
 
 app = Flask(__name__)
 CORS(app)  # Permettre toutes les origines par défaut
+# flask jwt
 
 
 @app.route("/api/login", methods=["POST"])
@@ -25,6 +26,10 @@ def login_handler():
     print(data)
     email = data.get("email")
     password = data.get("password")
+
+    # print(
+    #     request.headers["Authorization"]
+    # )  # return after check and check on other routes
 
     # Vérifier que les informations sont présentes
     if not email or not password:
@@ -73,6 +78,39 @@ def signup_handler():
         print(f"An error occured while accessing the DB : {err}")
         cnx.rollback()  # Annuler l'insertion si une erreur survient
         return jsonify({"error": "An error occured on Signup."}), 500
+    finally:
+        cursor.close()
+
+
+@app.route("/api/ads", methods=["POST"])
+def ads_handler():
+    # Récupérer les données envoyées depuis React
+    data = request.json
+    page = data.get("page", 0)  # Défaut à 0 si "page" n'est pas fourni
+    try:
+        page = int(page)
+    except:
+        return jsonify({"error": "Page is not an int."}), 409
+
+    if page < 0:
+        return jsonify({"error": "Page negative."}), 409
+
+    # Définir le nombre d'annonces par page
+    ads_per_page = 50
+    offset = page * ads_per_page
+
+    # Requête pour récupérer les annonces en fonction de la page
+    select_query = "SELECT * FROM ads ORDER BY id DESC LIMIT %s OFFSET %s"
+    cursor = cnx.cursor(dictionary=True)
+
+    try:
+        cursor.execute(select_query, (ads_per_page, offset))
+        ads = cursor.fetchall()  # Récupérer toutes les annonces
+
+        return jsonify({"ads": ads}), 200  # Retourner les annonces en format JSON
+    except mysql.connector.Error as err:
+        print(f"An error occurred while accessing the DB: {err}")
+        return jsonify({"error": "An error occurred while fetching ads."}), 500
     finally:
         cursor.close()
 
