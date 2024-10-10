@@ -79,7 +79,7 @@ function HomePage() {
                   <h5 className="card-title">{ad.title} - {ad.contractType}</h5>
                   <p className="card-text">{ad.place}</p>
                   <a
-                    className="btn" style={{ backgroundColor: '#add8e6' }}
+                    className="btn "
                     onClick={() => toggleExpand(ad.id)} // Assuming each ad has a unique ID
                   >
                     Learn More
