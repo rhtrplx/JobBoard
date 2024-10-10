@@ -168,10 +168,18 @@ def ads_handler():
         cursor.close()
 
 
+# TODO functions to use filers
+
+
 @app.route("/api/healthcheck", methods=["GET"])
 def healthcheck_handler():
     return "OK", 200
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001)
+    while True:
+        try:
+            app.run(host="0.0.0.0", port=5001)
+        except Exception as e:
+            print(f"Erreur détectée : {e}. Redémarrage dans 5 secondes...")
+            time.sleep(5)  # Pause avant de redémarrer l'application
