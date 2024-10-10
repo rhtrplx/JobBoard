@@ -3,7 +3,7 @@
   }
 
 .card:hover{
-    background-color:#e1edf0;
+    background-color:#f4f8fb;
 }
   
 .card-body p {
@@ -15,20 +15,40 @@ color: #333;
 font-weight: bold;
 }
 
-#filtersubmitbutton{
-    margin: 5px;
-}
-
-.filterbutton{
-    background-color: #1178be;
+#filtersubmit{
+    background-color: #98c3e8;
+    border-color: #6babe0;
     margin: 5px;
     border-radius: 5px;
-    color: white;
+    color: black;
 }
 
-.btn-primary{
-    background-color: #1178be;
+.filteroption{
+    border-color: #3d8ed0 !important;
+    margin: 5px;
+    border-radius: 5px;
+    color: black;
+    font-size: 1.3rem;
+
 }
+
+
+.learnmorebtn{
+    background-color: #98c3e8 !important;
+    margin: 5px;
+    border-radius: 5px;
+    color: black;
+}
+
+.ApplyNow, .Save{
+    background-color: 	#cee6fa;
+    border-color: #6babe0;
+    margin: 5px;
+    border-radius: 5px;
+    color: black;
+}
+
+
 
 .HeaderContainer {
     display: flex;
@@ -42,6 +62,12 @@ font-weight: bold;
     position: absolute;
     top: 50px;
     right: 50px;
+
+}
+.Logout {
+    position: absolute;
+    top: 50px;
+    left: 50px;
 
 }
 .HomeLogo {
@@ -58,4 +84,26 @@ font-weight: bold;
 .custom-width {
     width: 20% !important;
   }
+
+
+/* PROFILE */
+.Notes, .Saved {
+    height: 250px;
+    background-color: white; 
+    border-radius: 5px;
+    border: 5px solid #72A0C1;
+};
+
+.profilecontainer {
+    background-color: white; 
+    border-radius: 5px;
+    border: 5px solid #72A0C1;
+};
+
+.homebtn{
+    background-color: #cfe2f3 !important;
+}
+
+
+
 

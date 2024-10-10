@@ -6,15 +6,17 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
+import ApplicationForm from './pages/ApplicationForm';
 
 const WebRouter = () => {
   return (   
     <Router>
     <Routes>
-      <Route path="/" element={<FrontPage />} />
+      <Route path="/" element={<HomePage />} />
       <Route path="/create" element={<CreateAccount />} />
-      <Route path="/home" element={<HomePage/>} />
+      <Route path="/login" element={<FrontPage/>} />
       <Route path="/profile" element={<ProfilePage/>} />
+      <Route path="/applicationform" element={<ApplicationForm/>} />
     </Routes>
     </Router>
 );

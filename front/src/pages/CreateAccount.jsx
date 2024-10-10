@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import logo from "../assets/Logo.png";
 import CreateAccountButton from '../components/CreateAccountButton';
 import './Style.css';
 
 function FrontPage() {
-  // State to store form data
+  const navigate = useNavigate(); // Initialize useNavigate
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -16,7 +17,7 @@ function FrontPage() {
     city: '',
     country: '',
     zipcode: '',
-    contactInformations: '', // Changed to contactInformations for consistency
+    contactInformations: '',
     username: '',
   });
 
@@ -45,7 +46,9 @@ function FrontPage() {
 
       const data = await response.json();
       console.log('Success:', data);
-      // Optionally navigate to another page or show a success message
+
+      // Navigate to home after successful signup
+      navigate("/home");
 
     } catch (error) {
       console.error('Error:', error);
@@ -87,7 +90,7 @@ function FrontPage() {
             <input type="password" className="form-control" id="password" value={formData.password} onChange={handleChange} />
           </div>
           <div className="col-md-6">
-            <label htmlFor="birthday" className="form-label">Birthday</label>
+            <label htmlFor="birthdate" className="form-label">Birthday</label>
             <input type="date" className="form-control" id="birthdate" value={formData.birthdate} onChange={handleChange} />
           </div>
           <div className="col-md-12">
@@ -121,7 +124,7 @@ function FrontPage() {
           </div>
           
           <div className="col-12 d-flex justify-content-center mt-3">
-            <CreateAccountButton />
+            <CreateAccountButton onClick={handleSubmit} />
           </div>
           
         </form>

@@ -19,7 +19,7 @@ function ProfilePage() {
                         </a>
 
                         {/* Profile logo on the left */}
-                        <a className="HomeLogo" href="/home">
+                        <a className="HomeLogo" href="/">
                             <img src={HomeLogo} alt="Profile Logo" width="40" height="40" />
                         </a>
                     </div>
@@ -30,10 +30,10 @@ function ProfilePage() {
             <div className="row">
                 {/* Profile Photo */}
 
-                <div className="col-md-4 profilecontainer">
-                    <div className="card text-black d-flex justify-content-center border-primary">
+                <div className="col-md-4">
+                    <div className="card d-flex justify-content-center">
                         <img src={ProfilePhoto} className="card-img-top" alt="Profile Logo" />
-                        <div className="card-body">
+                        <div className="card profilecontainer">
                             <h5 className="card-title">Name Last Name</h5>
                             <p className="card-text">
                                 Hi! , My name is......
@@ -44,18 +44,18 @@ function ProfilePage() {
 
                 {/* Green and yellow blocks */}
                 <div className="col-md-8">
-                    <div className="row">
-                        <div className="col-12 mb-3">
-                            <div className="Saved border border-primary" style={{ height: '250px' }}>Saved</div>
-                        </div>
-                        <div className="col-12 mb-3">
-                            <div className="Notes border border-primary" style={{ height: '250px'}}>
-                                Notes
+                        <div className="row">
+                            <div className="col-12 mb-3">
+                                <div className="Saved">Saved</div>
+                            </div>
+                            <div className="col-12 mb-3">
+                                <div className="Notes">
+                                    Notes
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
             {/* Light blue and purple blocks */}
             <div className="row">

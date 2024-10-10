@@ -1,13 +1,18 @@
-import logo from "../assets/Logo.png";
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import SubmitButton from '../components/SubmitButton';
 import CreateButton from '../components/CreateButton';
-import { useNavigate } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import logo from "../assets/Logo.png";
 
 function FrontPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Get the redirect path from query parameters
+  const queryParams = new URLSearchParams(location.search);
+  const redirectPath = queryParams.get('redirect') || '/home'; // Default to /home
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,14 +23,17 @@ function FrontPage() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ "email" : email, "password": password }),
+      body: JSON.stringify({ email, password }),
     });
 
     const data = await response.json();
 
     if (response.ok) {
       console.log(data.message);
-      navigate("/home");
+      localStorage.setItem('isLoggedIn', 'true'); // Store login state
+
+      // Redirect to the specified path or default to /home
+      navigate(redirectPath);
     } else {
       console.error(data.message);
       alert(data.error);
@@ -45,7 +53,7 @@ function FrontPage() {
 
       {/* Form */}
       <div className="d-flex justify-content-center align-items-top min-vh-100">
-        <form className="w-50" onSubmit={handleSubmit}> {/* Add onSubmit here */}
+        <form className="w-50" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="InputEmail1" className="form-label">Email address</label>
             <input 
@@ -53,7 +61,7 @@ function FrontPage() {
               className="form-control" 
               id="InputEmail1" 
               value={email}
-              onChange={(e) => setEmail(e.target.value)} // Corrected onChange
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
 
@@ -64,13 +72,8 @@ function FrontPage() {
               className="form-control" 
               id="exampleInputPassword1" 
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // Added onChange for password
+              onChange={(e) => setPassword(e.target.value)}
             />
-          </div>
-
-          <div className="mb-3 form-check">
-            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
-            <label className="form-check-label" htmlFor="exampleCheck1">Keep me signed-in</label>
           </div>
 
           <SubmitButton handleSubmit={handleSubmit} />
