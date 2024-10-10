@@ -55,6 +55,7 @@ def signup_handler():
     # TODO support profile pictures
     email = data.get("email")
     password = data.get("password")
+    # confirmPassword = data.get("confirmPassword")
     name = data.get("name")
     lastName = data.get("lastName")
     city = data.get("city")
@@ -64,10 +65,11 @@ def signup_handler():
     birthdate = data.get("birthdate")
     title = data.get("title")
     contactInformations = data.get("contactInformations")
-    savedAdsIds = data.get("savedAdsIds")
+    savedAdsIds = None
     username = data.get("username")
     # xxx = data.get("xxx")
 
+    # email, password, confirmPassword, name, lastName, city, country, zipcode, description, birthdate, title, contactInformations, username
     # Vérifier que les informations sont présentes
     if (
         not email
