@@ -9,7 +9,7 @@ time.sleep(5)
 cnx = mysql.connector.connect(
     user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
     password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-    host="127.0.0.1",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+    host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
     database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
     use_pure=False,
 )
@@ -52,12 +52,39 @@ def login_handler():
 def signup_handler():
     # Récupérer les données envoyées depuis React
     data = request.json
+    # TODO support profile pictures
     email = data.get("email")
     password = data.get("password")
+    name = data.get("name")
+    lastName = data.get("lastName")
+    city = data.get("city")
+    country = data.get("country")
+    zipcode = data.get("zipcode")
+    description = data.get("description")
+    birthdate = data.get("birthdate")
+    title = data.get("title")
+    contactInformations = data.get("contactInformations")
+    savedAdsIds = data.get("savedAdsIds")
+    username = data.get("username")
+    # xxx = data.get("xxx")
 
     # Vérifier que les informations sont présentes
-    if not email or not password:
-        return jsonify({"error": "You must enter an email and a password."}), 400
+    if (
+        not email
+        or not password
+        or not name
+        or not lastName
+        or not city
+        or not country
+        or not zipcode
+        or not description
+        or not birthdate
+        or not title
+        or not contactInformations
+        or not savedAdsIds
+        or not username
+    ):
+        return jsonify({"error": "Please provide every info."}), 400
 
     # Vérifier si l'utilisateur existe déjà dans la base de données
     check_query = "SELECT * FROM users WHERE email = %s"
@@ -68,10 +95,36 @@ def signup_handler():
     if existing_user:
         return jsonify({"error": "This email is alread used."}), 409
 
+    # TODO try if this works
+    check_query = "SELECT * FROM users WHERE username = %s"
+    cursor = cnx.cursor(dictionary=True)
+    cursor.execute(check_query, (username,))
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        return jsonify({"error": "This username is alread used."}), 409
+
     # Insérer le nouvel utilisateur dans la base de données
-    insert_query = "INSERT INTO users (email, password) VALUES (%s, %s)"
+    insert_query = "INSERT INTO `users` (`id`, `email`, `password`, `name`, `lastName`, `city`, `country`, `zipcode`, `description`, `birthdate`, `title`, `contactInformations`, `savedAdsIds`, `username`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
     try:
-        cursor.execute(insert_query, (email, password))
+        cursor.execute(
+            insert_query,
+            (
+                email,
+                password,
+                name,
+                lastName,
+                city,
+                country,
+                zipcode,
+                description,
+                birthdate,
+                title,
+                contactInformations,
+                savedAdsIds,
+                username,
+            ),
+        )
         cnx.commit()  # Confirmer l'insertion
         return jsonify({"message": "Sucess Signup !"}), 201
     except mysql.connector.Error as err:
