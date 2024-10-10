@@ -65,7 +65,7 @@ def signup_handler():
     birthdate = data.get("birthdate")
     title = data.get("title")
     contactInformations = data.get("contactInformations")
-    savedAdsIds = None
+    savedAdsIds = 1
     username = data.get("username")
     # xxx = data.get("xxx")
 
@@ -107,7 +107,7 @@ def signup_handler():
         return jsonify({"error": "This username is alread used."}), 409
 
     # Insérer le nouvel utilisateur dans la base de données
-    insert_query = "INSERT INTO `users` (`id`, `email`, `password`, `name`, `lastName`, `city`, `country`, `zipcode`, `description`, `birthdate`, `title`, `contactInformations`, `savedAdsIds`, `username`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) "
+    insert_query = "INSERT INTO `users` (`id`, `email`, `password`, `name`, `lastName`, `city`, `country`, `zipcode`, `description`, `birthdate`, `title`, `contactInformations`, `savedAdsIds`, `username`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
     try:
         cursor.execute(
             insert_query,
@@ -128,7 +128,7 @@ def signup_handler():
             ),
         )
         cnx.commit()  # Confirmer l'insertion
-        return jsonify({"message": "Sucess Signup !"}), 201
+        return jsonify({"message": "Success Signup !"}), 201
     except mysql.connector.Error as err:
         print(f"An error occured while accessing the DB : {err}")
         cnx.rollback()  # Annuler l'insertion si une erreur survient
