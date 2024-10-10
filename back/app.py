@@ -21,6 +21,13 @@ CORS(app)  # Permettre toutes les origines par défaut
 
 @app.route("/api/login", methods=["POST"])
 def login_handler():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     # Récupérer les données envoyées depuis React
     data = request.json
     print(data)
@@ -50,6 +57,13 @@ def login_handler():
 
 @app.route("/api/signup", methods=["POST"])
 def signup_handler():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     # Récupérer les données envoyées depuis React
     data = request.json
     # TODO support profile pictures
@@ -139,6 +153,13 @@ def signup_handler():
 
 @app.route("/api/ads", methods=["POST"])
 def ads_handler():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     # Récupérer les données envoyées depuis React
     data = request.json
     page = data["page"]  # Défaut à 0 si "page" n'est pas fourni
