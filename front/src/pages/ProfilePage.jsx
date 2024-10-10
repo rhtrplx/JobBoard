@@ -1,10 +1,10 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import bear from "../assets/bear.png";
+import ProfilePhoto from "../assets/ProfilePhoto.png";
 import './Style.css';
 import logo from "../assets/Logo.png";
-import ProfileLogo from "../assets/ProfileLogo.png"
-import HomeLogo from "../assets/HomeLogo.png"
+import ProfileLogo from "../assets/ProfileLogo.png";
+import HomeLogo from "../assets/HomeLogo.png";
 
 function ProfilePage() {
     return (
@@ -28,16 +28,16 @@ function ProfilePage() {
 
             {/* Main content */}
             <div className="row">
-                {/* Card as the red block */}
-                <div className="col-md-4 mb-3">
-                    <div className="card bg text-black" style={{ width: "26rem", height: '300px' }}>
-                        <img src={bear} className="card-img-top" alt="Profile Logo" style={{ height: '150px', objectFit: 'cover' }} />
+                {/* Profile Photo */}
+
+                <div className="col-md-4 profilecontainer">
+                    <div className="card text-black d-flex justify-content-center border-primary">
+                        <img src={ProfilePhoto} className="card-img-top" alt="Profile Logo" />
                         <div className="card-body">
-                            <h5 className="card-title">Card title</h5>
+                            <h5 className="card-title">Name Last Name</h5>
                             <p className="card-text">
-                                Some quick example text to build on the card title and make up the bulk of the card's content.
+                                Hi! , My name is......
                             </p>
-                            <a href="/home" className="btn btn-light">Go to Home</a>
                         </div>
                     </div>
                 </div>
@@ -46,10 +46,12 @@ function ProfilePage() {
                 <div className="col-md-8">
                     <div className="row">
                         <div className="col-12 mb-3">
-                            <div className="bg-success" style={{ height: '150px' }}></div>
+                            <div className="Saved border border-primary" style={{ height: '250px' }}>Saved</div>
                         </div>
                         <div className="col-12 mb-3">
-                            <div className="bg-warning" style={{ height: '150px' }}></div>
+                            <div className="Notes border border-primary" style={{ height: '250px'}}>
+                                Notes
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -58,10 +60,10 @@ function ProfilePage() {
             {/* Light blue and purple blocks */}
             <div className="row">
                 <div className="col-md-6 mb-3">
-                    <div className="bg-info" style={{ height: '150px' }}></div>
+                    <div className="Reminders border border-dark" style={{ height: '150px' }}>Reminders</div>
                 </div>
                 <div className="col-md-6 mb-3">
-                    <div className="bg-secondary" style={{ height: '150px' }}></div>
+                    <div className="calendar border border-black" style={{ height: '150px' }}>Calendar</div>
                 </div>
             </div>
         </div>
@@ -69,9 +71,3 @@ function ProfilePage() {
 }
 
 export default ProfilePage;
-
-
-
-
-
-

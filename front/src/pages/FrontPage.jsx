@@ -73,7 +73,7 @@ function FrontPage() {
             <label className="form-check-label" htmlFor="exampleCheck1">Keep me signed-in</label>
           </div>
 
-          <SubmitButton handleSubmit={handleSubmit} /> {/* Removed email and password props */}
+          <SubmitButton handleSubmit={handleSubmit} />
           <br /> <br />
           <CreateButton />
         </form>

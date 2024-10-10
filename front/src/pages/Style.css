@@ -1,6 +1,10 @@
 .card-body {
     transition: all 3000s ease;
   }
+
+.card:hover{
+    background-color:#e1edf0;
+}
   
 .card-body p {
 font-size: 14px;
@@ -48,4 +52,10 @@ font-weight: bold;
 }
 
 
+
+/* CREATEACCOUNT PAGE */
+
+.custom-width {
+    width: 20% !important;
+  }
 
