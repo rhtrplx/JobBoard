@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import logo from "../assets/Logo.png";
-import CreateAccountButton from '../components/CreateAccountButton';
+import CreateAccountButton from '../components/CreateAccount';
 import './Style.css';
 
 function FrontPage() {
@@ -48,7 +48,7 @@ function FrontPage() {
       console.log('Success:', data);
 
       // Navigate to home after successful signup
-      navigate("/home");
+      navigate("/");
 
     } catch (error) {
       console.error('Error:', error);

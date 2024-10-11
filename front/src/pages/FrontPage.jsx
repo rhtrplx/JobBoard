@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SubmitButton from '../components/SubmitButton';
-import CreateButton from '../components/CreateButton';
 import logo from "../assets/Logo.png";
+import './Style.css';
+import { Link } from 'react-router-dom';
 
 function FrontPage() {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ function FrontPage() {
 
   // Get the redirect path from query parameters
   const queryParams = new URLSearchParams(location.search);
-  const redirectPath = queryParams.get('redirect') || '/home'; // Default to /home
+  const redirectPath = queryParams.get('redirect') || '/'; // Default to /home
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -78,7 +79,14 @@ function FrontPage() {
 
           <SubmitButton handleSubmit={handleSubmit} />
           <br /> <br />
-          <CreateButton />
+
+
+          <Link to="/create">
+            <button id="CreateAccount">
+              Create an Account
+            </button>
+          </Link>
+
         </form>
       </div>
     </div>

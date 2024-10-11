@@ -48,6 +48,17 @@ font-weight: bold;
     border-radius: 5px;
 }
 
+#CreateAccount{
+    background-color: #1178be
+    ;
+    border-color: #1178be
+    ;
+    color: white;
+    margin: 5px;
+    height: 35px;
+    border-radius: 5px;
+}
+
 .ApplyNow, .Save{
     background-color: 	#cee6fa;
     border-color: #6babe0;

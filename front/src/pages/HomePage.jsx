@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from "../assets/Logo.png";
-import ProfileLogo from "../assets/ProfileLogo.png";
-import Logout from "../assets/Logout.png";
 import './Style.css';
 import { useNavigate } from 'react-router-dom';
+import NavigationHeader from '../components/Header';
 
 function HomePage() {
   const [expanded, setExpanded] = useState(null);
@@ -41,38 +39,16 @@ function HomePage() {
     fetchAds();
   }, [page]);
 
-  // Check if the user is logged in
-  const isLoggedIn = () => {
-    return localStorage.getItem('isLoggedIn') === 'true'; // Check the login status stored in localStorage
-  };
-
-  // Handle Apply Now button click
+  // Simplified Apply Now button logic
   const handleApplyNowClick = () => {
-    if (isLoggedIn()) {
-      // If logged in, navigate to the application form
-      navigate('/applicationform');
-    }
+    navigate('/applicationform'); // Navigate directly to application form
   };
 
   return (
     <div className="container-fluid">
-      <header>
-        <div className="HeaderContainer">
-          <a className="Logo">
-            <img src={logo} alt="Logo" width="100" height="100" />
-          </a>
-          <a className="ProfileLogo" href="/profile">
-            <img src={ProfileLogo} alt="Profile Logo" width="40" height="40" />
-          </a>
-          {/* Adding Logout button */}
-          <img src={Logout} alt="Logout" width="40" height="40" className='Logout' onClick={() => {
-            localStorage.removeItem('isLoggedIn');
-            navigate('/login');
-          }} style={{ cursor: 'pointer' }} />
-        </div>
-      </header>
-
-      <div className="row" style={{ minHeight: '80vh' }}>
+        <NavigationHeader /> 
+      
+      <div className="row" style={{ minHeight: '80vh'}}>
         <nav className="col-md-3 bg-white text-black p-4">
           <h2>Filters</h2>
           <div>
@@ -100,7 +76,7 @@ function HomePage() {
                   <p className="card-text">{ad.description}</p>
                   <a
                     className="btn learnmorebtn"
-                    onClick={() => toggleExpand(ad.id)} 
+                    onClick={() => toggleExpand(ad.id)}
                   >
                     Learn More
                   </a>
@@ -113,7 +89,7 @@ function HomePage() {
                       <p>{ad.workingSchedules}</p>
                       <p>{ad.publicationDate}</p>
 
-                      {/* Apply Now button with login check */}
+                      {/* Apply Now button */}
                       <button className='ApplyNow' onClick={handleApplyNowClick}>Apply Now!</button>
                       <button className='Save'>Save</button>
                     </div>
@@ -126,12 +102,6 @@ function HomePage() {
           )}
         </main>
       </div>
-
-      <footer className="row text-black text-center p-4" style={{ backgroundColor: '#B9D9EB' }}>
-        <div className="col">
-          <p>Footer Content</p>
-        </div>
-      </footer>
     </div>
   );
 }

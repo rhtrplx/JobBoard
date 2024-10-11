@@ -3,28 +3,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ProfilePhoto from "../assets/ProfilePhoto.png";
 import './Style.css';
 import logo from "../assets/Logo.png";
-import ProfileLogo from "../assets/ProfileLogo.png";
-import HomeLogo from "../assets/HomeLogo.png";
+import NavigationHeader from '../components/Header';
 
 function ProfilePage() {
     return (
-        <div className="container mt-4">
-            {/* Header */}
-            <div className="row">
-                <header>
-                    <div className="HeaderContainer d-flex justify-content-center align-items-center position-relative">
-                        {/* Main logo centered */}
-                        <a className="Logo">
-                            <img src={logo} alt="Logo" width="100" height="100" />
-                        </a>
+        
 
-                        {/* Profile logo on the left */}
-                        <a className="HomeLogo" href="/">
-                            <img src={HomeLogo} alt="Profile Logo" width="40" height="40" />
-                        </a>
-                    </div>
-                </header>
-            </div>
+        
+
+        <div className="container-fluid">
+            {/* Header */}
+            <div><NavigationHeader /></div>
+             
 
             {/* Main content */}
             <div className="row">

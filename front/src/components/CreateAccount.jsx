@@ -10,7 +10,13 @@ function CreateButton() {
     };
 
     return(
-    <button type="button" className="btn" style={{ backgroundColor: '#1178be', color: 'white' }} onClick={handleCreate}>
+    <button type="button" className="btn" style={{
+        backgroundColor: '#0A66C2',
+        borderColor: '#0A66C2',
+        color: 'white',
+        margin: '5px',
+        borderRadius: '5px'
+      }}  onClick={handleCreate}>
     Create an Account
     </button>
     );
