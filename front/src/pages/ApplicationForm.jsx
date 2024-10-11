@@ -136,8 +136,10 @@ function ApplicationForm() {
       const result = await response.json();
       if (response.ok) {
         console.log("Application réussie:", result);
+        alert(result.message)
       } else {
         console.error("Erreur lors de l'application:", result);
+        alert(result.error)
       }
     } catch (error) {
       console.error("Erreur lors de la requête:", error);
