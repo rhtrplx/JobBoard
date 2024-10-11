@@ -25,18 +25,38 @@ function ApplicationForm() {
           </a>
         </div>
       </header>
-      <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com"/>
-      </div>
-      <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-      </div>
 
+      <form className="row g-3 d-flex justify-content-center">
+          <div className="col-md-6">
+            <label htmlFor="name" className="form-label">Name</label>
+            <input type="text" className="form-control" id="name"/>
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="lastName" className="form-label">Last Name</label>
+            <input type="text" className="form-control" id="lastName"/>
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="email" className="form-label">Email</label>
+            <input type="email" className="form-control" id="email"/>
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="contactInformations" className="form-label">Phone Number</label>
+            <input type="text" className="form-control" id="contactInformations"/>
+          </div>
 
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Message</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          </div>
 
-      </div>
+          <div class="mb-3">
+            <label for="formFile" class="form-label">Upload Resume</label>
+            <input class="form-control" type="file" id="formFile"/>
+          </div>
+
+          </form>
+
+    </div>
       
   );
 }
