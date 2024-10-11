@@ -191,6 +191,79 @@ def ads_handler():
         cursor.close()
 
 
+@app.route("/api/apply", methods=["POST"])
+def apply_handler():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
+    # Récupérer les données envoyées depuis React
+    data = request.json
+    adId = data["adId"]
+    publisherId = data["publisherId"]
+    userId = data["userId"]
+    name = data["name"]
+    lastName = data["lastName"]
+    email = data["email"]
+    phoneNumber = data["phoneNumber"]
+    city = data["city"]
+    country = data["country"]
+    zipcode = data["zipcode"]
+    message = data["message"]
+    resume = data["resume"]
+
+    try:
+        adId = int(adId)
+        publisherId = int(publisherId)
+        userId = int(userId)
+    except:
+        return jsonify({"error": "an Id is not an int."}), 409
+
+    if adId < 0 or publisherId < 0 or userId < 0:
+        return jsonify({"error": "an Id is negative."}), 409
+
+    # Requête pour récupérer les annonces en fonction de la page
+    select_query = "INSERT INTO `applications` (`id`, `adId`, `publisherId`, `userId`, `name`, `lastName`, `email`, `phoneNumber`, `city`, `country`, `zipcode`, `message`, `resume`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    cursor = cnx.cursor(dictionary=True)
+
+    try:
+        cursor.execute(
+            select_query,
+            (
+                adId,
+                publisherId,
+                userId,
+                name,
+                lastName,
+                email,
+                phoneNumber,
+                city,
+                country,
+                zipcode,
+                message,
+                resume,
+            ),
+        )
+        # TODO check here is execute is sucessful...
+        cnx.commit()
+
+        return (
+            jsonify({"message": "Success created the application."}),
+            200,
+        )  # Retourner les annonces en format JSON
+    except mysql.connector.Error as err:
+        print(f"An error occurred while creating the application: {err}")
+        return (
+            jsonify({"error": "An error occurred while creating the application:"}),
+            500,
+        )
+    finally:
+        cursor.close()
+
+
 # TODO functions to use filers
 
 
