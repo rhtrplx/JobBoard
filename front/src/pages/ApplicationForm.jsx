@@ -47,7 +47,7 @@ function ApplicationForm() {
         const data = await response.json();
 
         console.log(data);
-        
+
         setFormData((prevData) => ({
           ...prevData,
           name: data.user.name || '',
@@ -92,10 +92,63 @@ function ApplicationForm() {
     // Implement form submission logic here
   };
 
+  const handleApply = async (event) => {
+    event.preventDefault();
+
+    // Construire formData avec les valeurs actuelles
+    const submissionData = {
+      adId: "1",  // Récupérer l'ID de l'annonce si disponible
+      publisherId: "1",  // Récupérer l'ID du publisher si disponible
+      userId: "1",  // Vous pouvez récupérer cet ID s'il est disponible
+      // adId: jobData?.id,  // Récupérer l'ID de l'annonce si disponible
+      // publisherId: jobData?.publisherId,  // Récupérer l'ID du publisher si disponible
+      // userId: null,  // Vous pouvez récupérer cet ID s'il est disponible
+      name: formData.name,  // Nom de l'utilisateur
+      lastName: formData.lastName,  // Prénom
+      email: formData.email,  // Email
+      phoneNumber: formData.contactInformations,  // Numéro de téléphone ou autre contact
+      city: formData.city,  // Ville
+      country: formData.country,  // Pays
+      zipcode: formData.zipcode,  // Code postal
+      message: formData.message,  // Message de l'utilisateur
+      resume: "",  // Fichier de CV (si besoin)
+    };
+
+    // Vérifier si vous devez envoyer le fichier "resume"
+    const formBody = new FormData();
+    Object.keys(submissionData).forEach((key) => {
+      if (submissionData[key] !== null) {
+        formBody.append(key, submissionData[key]);
+      }
+    });
+
+    console.log(JSON.stringify(submissionData))
+    // Envoyer les données via POST au backend Flask
+    try {
+      const response = await fetch("http://localhost:5001/api/apply", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(submissionData),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        console.log("Application réussie:", result);
+      } else {
+        console.error("Erreur lors de l'application:", result);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la requête:", error);
+    }
+  };
+
+
   return (
     <div className="container-fluid">
       <NavigationHeader />
-      
+
       <div className="row">
         {/* Form Column on the Left */}
         <div className="col-md-6">
@@ -131,7 +184,7 @@ function ApplicationForm() {
               <input className="form-control" type="file" id="formFile" onChange={handleFileChange} />
             </div>
             <div className="d-flex justify-content-center">
-              <button type="submit" className='btn btn-primary' disabled={loading}>Send Application</button>
+              <button type="submit" className='btn btn-primary' disabled={loading} onClick={handleApply}>Submit Application</button>
             </div>
           </form>
           {loading && <p className="text-muted">Fetching user data...</p>} {/* Loading message */}
