@@ -51,10 +51,6 @@ function HomePage() {
     if (isLoggedIn()) {
       // If logged in, navigate to the application form
       navigate('/applicationform');
-    } else {
-      // If not logged in, redirect to login page or show an alert
-      alert('Please log in to apply.');
-      navigate('/login?redirect=/applicationform');
     }
   };
 
