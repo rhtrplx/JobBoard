@@ -16,28 +16,36 @@ font-weight: bold;
 }
 
 #filtersubmit{
-    background-color: #98c3e8;
-    border-color: #6babe0;
+    background-color: #0A66C2
+    ;
+    border-color: #0A66C2
+    ;
     margin: 5px;
     border-radius: 5px;
-    color: black;
+    color: white;
 }
 
 .filteroption{
-    border-color: #3d8ed0 !important;
+    background-color: #0A66C2
+     !important;
+    border-color: #0A66C2
+    !important;
     margin: 5px;
     border-radius: 5px;
-    color: black;
+    color: white !important;
     font-size: 1.3rem;
 
 }
 
 
 .learnmorebtn{
-    background-color: #98c3e8 !important;
+    background-color: #0A66C2
+    !important;
+    border-color: #0A66C2
+    !important;
+    color: white !important;
     margin: 5px;
     border-radius: 5px;
-    color: black;
 }
 
 .ApplyNow, .Save{
@@ -107,3 +115,14 @@ font-weight: bold;
 
 
 
+.SendApplication{
+    background-color: #0A66C2
+    !important;
+    border-color: #0A66C2
+    !important;
+    color: white !important;
+    width: 150px !important;
+    height: 30px !important;
+    border-radius: 5px;
+
+};
