@@ -87,10 +87,10 @@ function ProfilePage() {
             </div>
             <div className="row">
                 <div className="col-md-6 mb-3">
-                    <div className="Reminders border border-dark" style={{ height: '150px' }}>Reminders</div>
+                    <div className="Reminders" style={{ height: '150px' }}>Reminders</div>
                 </div>
                 <div className="col-md-6 mb-3">
-                    <div className="calendar border border-black" style={{ height: '150px' }}>Calendar</div>
+                    <div className="calendar" style={{ height: '150px' }}>Calendar</div>
                 </div>
             </div>
         </div>

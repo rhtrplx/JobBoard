@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Style.css';
 import NavigationHeader from '../components/Header';
+import { useLocation } from 'react-router-dom';
 
 function ApplicationForm() {
+  const location = useLocation();
+  const jobData = location.state?.jobData;
+
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -11,49 +15,59 @@ function ApplicationForm() {
     contactInformations: '',
     city: '',
     country: '',
-    zipcode: ''
+    zipcode: '',
+    message: '',
+    resume: null,
   });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch user data if logged in
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoading(false);
+      return; // No token, skip fetching
+    }
+
     const fetchUserData = async () => {
       try {
         const response = await fetch('http://localhost:5001/api/users', {
           method: 'GET',
           headers: {
-            'Authorization': `${localStorage.getItem('token')}`
-          }
+            'Authorization': `${token}`, // Ensure proper format
+          },
         });
 
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }
 
-        const userData = await response.json();
-        setFormData({
-          name: userData.name || '',
-          lastName: userData.lastName || '',
-          email: userData.email || '',
-          contactInformations: userData.phoneNumber || '',
-          city: userData.city || '',
-          country: userData.country || '',
-          zipcode: userData.zipcode || '',
-        });
+        const data = await response.json();
+
+        console.log(data);
+        
+        setFormData((prevData) => ({
+          ...prevData,
+          name: data.user.name || '',
+          lastName: data.user.lastName || '',
+          email: data.user.email || '',
+          contactInformations: data.user.contactInformations || '',
+          city: data.user.city || '',
+          country: data.user.country || '',
+          zipcode: data.user.zipcode || '',
+        }));
       } catch (error) {
+        setError('Could not fetch user data');
         console.error(error);
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
 
     fetchUserData();
-  }, []);
-
-  const token = localStorage.getItem('token');
-  if (token) {
-    // Use token to fetch user details and autofill the form
-  } else {
-    // No token, user must manually fill out the form
-  }
-
+  }, []); // Empty dependency array to run on component mount
 
   // Handle form data changes
   const handleChange = (e) => {
@@ -64,51 +78,84 @@ function ApplicationForm() {
     }));
   };
 
+  // Handle file change
+  const handleFileChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      resume: e.target.files[0],
+    }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Implement form submission logic here
+  };
+
   return (
     <div className="container-fluid">
       <NavigationHeader />
+      
+      <div className="row">
+        {/* Form Column on the Left */}
+        <div className="col-md-6">
+          <form className="row g-3" onSubmit={handleSubmit}>
+            {['name', 'lastName', 'email', 'contactInformations', 'city', 'country', 'zipcode'].map((field, index) => (
+              <div className="col-md-6" key={index}>
+                <label htmlFor={field} className="form-label">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  disabled={loading} // Disable input while loading
+                  placeholder={loading ? 'Loading...' : ''}
+                />
+              </div>
+            ))}
+            <div className="mb-3">
+              <label htmlFor="message" className="form-label">Message</label>
+              <textarea
+                className="form-control"
+                id="message"
+                rows="3"
+                value={formData.message}
+                onChange={handleChange}
+                disabled={loading} // Disable textarea while loading
+                placeholder={loading ? 'Loading...' : ''}
+              ></textarea>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="formFile" className="form-label">Upload Resume</label>
+              <input className="form-control" type="file" id="formFile" onChange={handleFileChange} />
+            </div>
+            <div className="d-flex justify-content-center">
+              <button type="submit" className='btn btn-primary' disabled={loading}>Send Application</button>
+            </div>
+          </form>
+          {loading && <p className="text-muted">Fetching user data...</p>} {/* Loading message */}
+          {error && <p className="text-danger">{error}</p>} {/* Error message */}
+        </div>
 
-      <form className="row g-3 d-flex justify-content-center">
+        {/* Job Information Column on the Right */}
         <div className="col-md-6">
-          <label htmlFor="name" className="form-label">Name</label>
-          <input type="text" className="form-control" id="name" value={formData.name} onChange={handleChange} />
+          {jobData ? (
+            <div className="card mb-3">
+              <div className="card-body">
+                <h5 className="card-title">{jobData.title} - {jobData.contractType}</h5>
+                <p className="card-text">{jobData.description}</p>
+                <p>Location: {jobData.place}</p>
+                <p>Wages: {jobData.wages}</p>
+                <p>Working Schedules: {jobData.workingSchedules}</p>
+                <p>Publication Date: {jobData.publicationDate}</p>
+              </div>
+            </div>
+          ) : (
+            <p>Loading job information...</p>
+          )}
         </div>
-        <div className="col-md-6">
-          <label htmlFor="lastName" className="form-label">Last Name</label>
-          <input type="text" className="form-control" id="lastName" value={formData.lastName} onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="email" className="form-label">Email</label>
-          <input type="email" className="form-control" id="email" value={formData.email} onChange={handleChange} />
-        </div>
-        <div className="col-md-6">
-          <label htmlFor="contactInformations" className="form-label">Phone Number</label>
-          <input type="text" className="form-control" id="contactInformations" value={formData.contactInformations} onChange={handleChange} />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="city" className="form-label">City</label>
-          <input type="text" className="form-control" id="city" value={formData.city} onChange={handleChange} />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="country" className="form-label">Country</label>
-          <input type="text" className="form-control" id="country" value={formData.country} onChange={handleChange} />
-        </div>
-        <div className="col-md-4">
-          <label htmlFor="zipcode" className="form-label">Zip</label>
-          <input type="text" className="form-control" id="zipcode" value={formData.zipcode} onChange={handleChange} />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="message" className="form-label">Message</label>
-          <textarea className="form-control" id="message" rows="3"></textarea>
-        </div>
-        <div className="mb-3">
-          <label htmlFor="formFile" className="form-label">Upload Resume</label>
-          <input className="form-control" type="file" id="formFile" />
-        </div>
-        <div className="d-flex justify-content-center">
-          <button className='btn btn-primary'>Send Application</button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

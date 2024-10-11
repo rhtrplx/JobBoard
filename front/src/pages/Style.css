@@ -16,9 +16,9 @@ font-weight: bold;
 }
 
 #filtersubmit{
-    background-color: #0A66C2
+    background-color: 	#477ba2
     ;
-    border-color: #0A66C2
+    border-color: 		#69a3cf
     ;
     margin: 5px;
     border-radius: 5px;
@@ -26,22 +26,24 @@ font-weight: bold;
 }
 
 .filteroption{
-    background-color: #0A66C2
+    background-color: #cee6fa
      !important;
-    border-color: #0A66C2
+    border-color: #90bfe2
     !important;
     margin: 5px;
     border-radius: 5px;
-    color: white !important;
+    color: black !important;
     font-size: 1.3rem;
 
 }
 
 
 .learnmorebtn{
-    background-color: #0A66C2
+    background-color: #1178be
+
     !important;
-    border-color: #0A66C2
+    border-color: #1178be
+
     !important;
     color: white !important;
     margin: 5px;
@@ -58,7 +60,7 @@ font-weight: bold;
     border-radius: 5px;
 }
 
-.ApplyNow, .Save{
+.Save{
     background-color: 	#cee6fa;
     border-color: #6babe0;
     margin: 5px;
@@ -105,7 +107,7 @@ font-weight: bold;
 
 
 /* PROFILE */
-.Notes, .Saved {
+.Notes, .Saved, .Reminders, .calendar{
     height: 250px;
     background-color: white; 
     border-radius: 5px;
@@ -136,3 +138,16 @@ font-weight: bold;
     border-radius: 5px;
 
 };
+
+
+
+@media (max-width: 640px) {
+    .order-lg-1 {
+      order: 1 !important; /* Job information appears first */
+    }
+  
+    .order-lg-2 {
+      order: 2 !important; /* Form appears second */
+    }
+  }
+  

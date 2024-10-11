@@ -33,20 +33,15 @@ function HomePage() {
       const data = await response.json();
       setAds(data.ads);
     } catch (error) {
-      console.error("Failed to fetch ads:", error); // Log the error for debugging
-      alert("Failed to fetch ads. Please try again later."); // Optional user alert
+      console.error("Failed to fetch ads:", error);
+      alert("Failed to fetch ads. Please try again later.");
     }
   };
 
   // Call fetchAds when the component mounts or page changes
   useEffect(() => {
     fetchAds();
-  }, [page]); // You can add page here if you want to refetch ads when the page changes
-
-  // Simplified Apply Now button logic
-  const handleApplyNowClick = () => {
-    navigate('/applicationform'); // Navigate directly to application form
-  };
+  }, [page]);
 
   return (
     <div className="container-fluid">
@@ -93,7 +88,8 @@ function HomePage() {
                       <p>{ad.workingSchedules}</p>
                       <p>{ad.publicationDate}</p>
 
-                      <ApplyNowButton/>
+                      {/* Pass ad data to ApplyNowButton */}
+                      <ApplyNowButton jobData={ad} />
                       <button className='Save'>Save</button>
                     </div>
                   )}
