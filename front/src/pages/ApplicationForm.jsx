@@ -21,14 +21,14 @@ function ApplicationForm() {
         const response = await fetch('http://localhost:5001/api/users', {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `${localStorage.getItem('token')}`
           }
         });
-  
+
         if (!response.ok) {
           throw new Error('Failed to fetch user data');
         }
-  
+
         const userData = await response.json();
         setFormData({
           name: userData.name || '',
@@ -43,17 +43,17 @@ function ApplicationForm() {
         console.error(error);
       }
     };
-  
+
     fetchUserData();
   }, []);
 
   const token = localStorage.getItem('token');
-if (token) {
-  // Use token to fetch user details and autofill the form
-} else {
-  // No token, user must manually fill out the form
-}
-  
+  if (token) {
+    // Use token to fetch user details and autofill the form
+  } else {
+    // No token, user must manually fill out the form
+  }
+
 
   // Handle form data changes
   const handleChange = (e) => {
@@ -66,7 +66,7 @@ if (token) {
 
   return (
     <div className="container-fluid">
-      <NavigationHeader /> 
+      <NavigationHeader />
 
       <form className="row g-3 d-flex justify-content-center">
         <div className="col-md-6">
@@ -103,7 +103,7 @@ if (token) {
         </div>
         <div className="mb-3">
           <label htmlFor="formFile" className="form-label">Upload Resume</label>
-          <input className="form-control" type="file" id="formFile"/>
+          <input className="form-control" type="file" id="formFile" />
         </div>
         <div className="d-flex justify-content-center">
           <button className='btn btn-primary'>Send Application</button>

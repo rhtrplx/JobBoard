@@ -19,44 +19,44 @@ function FrontPage() {
     event.preventDefault();
 
     try {
-        // Make a POST request to the Flask API
-        const response = await fetch("http://localhost:5001/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email, password }),
-        });
+      // Make a POST request to the Flask API
+      const response = await fetch("http://localhost:5001/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-        const data = await response.json();
+      const data = await response.json();
 
-        console.log(data.user.id)
+      console.log(data.user.token)
 
-        if (response.ok) {
-            console.log(data.message);
-            
-            // Save the token in localStorage
-            localStorage.setItem('token', data.token); // Assuming the API returns a token
-            
-            // Debugging: Log the token to verify it is being set
-            console.log('Token saved in localStorage:', data.token);
+      if (response.ok) {
+        console.log(data.message);
 
-            // Save user data in localStorage
-            localStorage.setItem('isLoggedIn', 'true'); // Store login state
-            localStorage.setItem('username', data.name); // Assuming the API returns the user's name
-            localStorage.setItem('email', data.email); // Assuming the API returns the user's email
+        // Save the token in localStorage
+        localStorage.setItem('token', data.user.token); // Assuming the API returns a token
 
-            // Redirect to the specified path or default to /home
-            navigate(redirectPath);
-        } else {
-            console.error(data.message);
-            alert(data.error);
-        }
+        // Debugging: Log the token to verify it is being set
+        console.log('Token saved in localStorage:', data.user.token);
+
+        // Save user data in localStorage
+        localStorage.setItem('isLoggedIn', 'true'); // Store login state
+        localStorage.setItem('username', data.user.name); // Assuming the API returns the user's name
+        localStorage.setItem('email', data.user.email); // Assuming the API returns the user's email
+
+        // Redirect to the specified path or default to /home
+        navigate(redirectPath);
+      } else {
+        console.error(data.message);
+        alert(data.error);
+      }
     } catch (error) {
-        console.error("Error during login:", error);
-        alert("Failed to log in. Please try again.");
+      console.error("Error during login:", error);
+      alert("Failed to log in. Please try again.");
     }
-};
+  };
 
 
   return (
@@ -75,10 +75,10 @@ function FrontPage() {
         <form className="w-50" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="InputEmail1" className="form-label">Email address</label>
-            <input 
-              type="email" 
-              className="form-control" 
-              id="InputEmail1" 
+            <input
+              type="email"
+              className="form-control"
+              id="InputEmail1"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -86,10 +86,10 @@ function FrontPage() {
 
           <div className="mb-3">
             <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-            <input 
-              type="password" 
-              className="form-control" 
-              id="exampleInputPassword1" 
+            <input
+              type="password"
+              className="form-control"
+              id="exampleInputPassword1"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />

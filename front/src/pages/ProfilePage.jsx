@@ -14,6 +14,7 @@ function ProfilePage() {
 
     useEffect(() => {
         const token = localStorage.getItem('token');
+        console.log(token)
         if (!token) {
             setError("No user is logged in");
             setLoading(false);
@@ -25,10 +26,11 @@ function ProfilePage() {
                 const response = await fetch("http://localhost:5001/api/users", {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}` // Include token for authorization
+                        'Authorization': `${token}`, // Include token for authorization,
                     }
                 });
 
+                console.log(response);
                 if (!response.ok) {
                     throw new Error('Failed to fetch user data');
                 }
