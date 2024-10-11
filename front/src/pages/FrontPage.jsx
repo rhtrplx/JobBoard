@@ -18,28 +18,46 @@ function FrontPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Make a POST request to the Flask API
-    const response = await fetch("http://localhost:5001/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+        // Make a POST request to the Flask API
+        const response = await fetch("http://localhost:5001/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (response.ok) {
-      console.log(data.message);
-      localStorage.setItem('isLoggedIn', 'true'); // Store login state
+        console.log(data.user.id)
 
-      // Redirect to the specified path or default to /home
-      navigate(redirectPath);
-    } else {
-      console.error(data.message);
-      alert(data.error);
+        if (response.ok) {
+            console.log(data.message);
+            
+            // Save the token in localStorage
+            localStorage.setItem('token', data.token); // Assuming the API returns a token
+            
+            // Debugging: Log the token to verify it is being set
+            console.log('Token saved in localStorage:', data.token);
+
+            // Save user data in localStorage
+            localStorage.setItem('isLoggedIn', 'true'); // Store login state
+            localStorage.setItem('username', data.name); // Assuming the API returns the user's name
+            localStorage.setItem('email', data.email); // Assuming the API returns the user's email
+
+            // Redirect to the specified path or default to /home
+            navigate(redirectPath);
+        } else {
+            console.error(data.message);
+            alert(data.error);
+        }
+    } catch (error) {
+        console.error("Error during login:", error);
+        alert("Failed to log in. Please try again.");
     }
-  };
+};
+
 
   return (
     <div>
@@ -80,13 +98,11 @@ function FrontPage() {
           <SubmitButton handleSubmit={handleSubmit} />
           <br /> <br />
 
-
           <Link to="/create">
             <button id="CreateAccount">
               Create an Account
             </button>
           </Link>
-
         </form>
       </div>
     </div>

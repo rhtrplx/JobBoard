@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from "../assets/Logo.png";
-import ProfileLogo from "../assets/ProfileLogo.png";
 import './Style.css';
 import NavigationHeader from '../components/Header';
 
@@ -18,41 +16,44 @@ function ApplicationForm() {
 
   // Fetch user data if logged in
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-
-    if (isLoggedIn) {
-      const fetchUserData = async () => {
-        try {
-          const response = await fetch('http://localhost:5001/api/users', {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}` // Add your auth token if needed
-            }
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch user data');
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/api/users', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
-
-          const userData = await response.json();
-          // Set form data with fetched user data
-          setFormData({
-            name: userData.name || '',
-            lastName: userData.lastName || '',
-            email: userData.email || '',
-            contactInformations: userData.phoneNumber || '',
-            city: userData.city || '',
-            country: userData.country || '',
-            zipcode: userData.zipcode || '',
-          });
-        } catch (error) {
-          console.error(error);
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to fetch user data');
         }
-      };
-
-      fetchUserData();
-    }
+  
+        const userData = await response.json();
+        setFormData({
+          name: userData.name || '',
+          lastName: userData.lastName || '',
+          email: userData.email || '',
+          contactInformations: userData.phoneNumber || '',
+          city: userData.city || '',
+          country: userData.country || '',
+          zipcode: userData.zipcode || '',
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    fetchUserData();
   }, []);
+
+  const token = localStorage.getItem('token');
+if (token) {
+  // Use token to fetch user details and autofill the form
+} else {
+  // No token, user must manually fill out the form
+}
+  
 
   // Handle form data changes
   const handleChange = (e) => {
@@ -97,16 +98,17 @@ function ApplicationForm() {
           <input type="text" className="form-control" id="zipcode" value={formData.zipcode} onChange={handleChange} />
         </div>
         <div className="mb-3">
-          <label htmlFor="exampleFormControlTextarea1" className="form-label">Message</label>
-          <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          <label htmlFor="message" className="form-label">Message</label>
+          <textarea className="form-control" id="message" rows="3"></textarea>
         </div>
         <div className="mb-3">
           <label htmlFor="formFile" className="form-label">Upload Resume</label>
           <input className="form-control" type="file" id="formFile"/>
         </div>
+        <div className="d-flex justify-content-center">
+          <button className='btn btn-primary'>Send Application</button>
+        </div>
       </form>
-
-      <button className='SendApplication'>Send Application</button>
     </div>
   );
 }

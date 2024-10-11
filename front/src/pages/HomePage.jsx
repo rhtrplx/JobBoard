@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Style.css';
 import { useNavigate } from 'react-router-dom';
 import NavigationHeader from '../components/Header';
+import ApplyNowButton from '../components/ApplyNow';
 
 function HomePage() {
   const [expanded, setExpanded] = useState(null);
@@ -14,30 +15,33 @@ function HomePage() {
     setExpanded(expanded === id ? null : id);
   };
 
-  useEffect(() => {
-    const fetchAds = async () => {
-      try {
-        const response = await fetch("http://localhost:5001/api/ads", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ page }),
-        });
+  // Fetch ads from the API
+  const fetchAds = async () => {
+    try {
+      const response = await fetch("http://localhost:5001/api/ads", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ page }),
+      });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch ads');
-        }
-
-        const data = await response.json();
-        setAds(data.ads);
-      } catch (error) {
-        console.error(error);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
       }
-    };
 
+      const data = await response.json();
+      setAds(data.ads);
+    } catch (error) {
+      console.error("Failed to fetch ads:", error); // Log the error for debugging
+      alert("Failed to fetch ads. Please try again later."); // Optional user alert
+    }
+  };
+
+  // Call fetchAds when the component mounts or page changes
+  useEffect(() => {
     fetchAds();
-  }, [page]);
+  }, [page]); // You can add page here if you want to refetch ads when the page changes
 
   // Simplified Apply Now button logic
   const handleApplyNowClick = () => {
@@ -46,9 +50,9 @@ function HomePage() {
 
   return (
     <div className="container-fluid">
-        <NavigationHeader /> 
-      
-      <div className="row" style={{ minHeight: '80vh'}}>
+      <NavigationHeader />
+
+      <div className="row" style={{ minHeight: '80vh' }}>
         <nav className="col-md-3 bg-white text-black p-4">
           <h2>Filters</h2>
           <div>
@@ -89,8 +93,7 @@ function HomePage() {
                       <p>{ad.workingSchedules}</p>
                       <p>{ad.publicationDate}</p>
 
-                      {/* Apply Now button */}
-                      <button className='ApplyNow' onClick={handleApplyNowClick}>Apply Now!</button>
+                      <ApplyNowButton/>
                       <button className='Save'>Save</button>
                     </div>
                   )}
