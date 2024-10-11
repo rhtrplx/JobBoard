@@ -29,7 +29,7 @@ Api's routes:
 ### Login (POST):
     localhost:5001/api/login
 - sent body: 
-```
+```json
 {
     "email": "rachid@example.com",
     "password": "hashed_password1"
@@ -38,7 +38,7 @@ Api's routes:
 
 - received:
 
-```
+```json
 {
     "message": "Success Login",
     "user": {
@@ -63,7 +63,7 @@ Api's routes:
 ### Signup (POST):
     localhost:5001/api/login
 - sent body: 
-```
+```json
 {
     "email": "rachid@example.com",
     "password": "hashed_password1",
@@ -83,7 +83,7 @@ Api's routes:
 
 - received:
 
-```
+```json
 {
     "message": "Success Signup !"
 }
@@ -92,7 +92,7 @@ Api's routes:
 ### Gets Ads (POST):
     localhost:5001/api/ads
 - sent body: 
-```
+```json
 {
     "page": "0"
 }
@@ -100,7 +100,7 @@ Api's routes:
 
 - received:
 
-```
+```json
 {
     "ads": [
         {
@@ -135,7 +135,7 @@ Api's routes:
 ### Apply to an ad (POST):
     localhost:5001/api/apply
 - sent body: 
-```
+```json
 {
     "adId": 1,
     "publisherId": 2,
@@ -154,7 +154,7 @@ Api's routes:
 
 - received:
 
-```
+```json
 {
     "message": "Success created the application."
 }
