@@ -5,6 +5,14 @@
 .card:hover{
     background-color:#f4f8fb;
 }
+.profilecard {
+    transition: none; /* Disable transition effects */
+}
+
+.profilecard:hover {
+    box-shadow: none; /* Remove the shadow on hover */
+    background-color: inherit; /* Prevent background color change on hover */
+}
   
 .card-body p {
 font-size: 14px;
@@ -140,14 +148,12 @@ font-weight: bold;
 };
 
 
-
-@media (max-width: 640px) {
-    .order-lg-1 {
-      order: 1 !important; /* Job information appears first */
+@media (min-width: 768px) {
+    .job-ad {
+      order: 2; /* Ensure job ad appears second on larger screens */
     }
-  
-    .order-lg-2 {
-      order: 2 !important; /* Form appears second */
+    .application-form {
+      order: 1; /* Ensure form appears first on larger screens */
     }
   }
   

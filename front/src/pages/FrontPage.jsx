@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import SubmitButton from '../components/SubmitButton';
 import logo from "../assets/Logo.png";
@@ -10,6 +10,14 @@ function FrontPage() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Check if the user is logged in
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+      navigate('/'); // Redirect if already logged in
+    }
+  }, [navigate]);
 
   // Get the redirect path from query parameters
   const queryParams = new URLSearchParams(location.search);
@@ -30,21 +38,16 @@ function FrontPage() {
 
       const data = await response.json();
 
-      console.log(data.user.token)
-
       if (response.ok) {
         console.log(data.message);
 
         // Save the token in localStorage
-        localStorage.setItem('token', data.user.token); // Assuming the API returns a token
-
-        // Debugging: Log the token to verify it is being set
-        console.log('Token saved in localStorage:', data.user.token);
+        localStorage.setItem('token', data.user.token);
 
         // Save user data in localStorage
-        localStorage.setItem('isLoggedIn', 'true'); // Store login state
-        localStorage.setItem('username', data.user.name); // Assuming the API returns the user's name
-        localStorage.setItem('email', data.user.email); // Assuming the API returns the user's email
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('username', data.user.name);
+        localStorage.setItem('email', data.user.email);
 
         // Redirect to the specified path or default to /home
         navigate(redirectPath);
@@ -57,7 +60,6 @@ function FrontPage() {
       alert("Failed to log in. Please try again.");
     }
   };
-
 
   return (
     <div>

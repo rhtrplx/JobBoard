@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import ProfilePhoto from "../assets/ProfilePhoto.png"; // Adjust the path accordingly
+import ProfilePhoto from "../assets/ProfilePhoto.png";
 import './Style.css';
 import NavigationHeader from '../components/Header';
 
@@ -18,9 +18,7 @@ function ProfilePage() {
         const token = localStorage.getItem('token');
 
         if (!token) {
-            setError("No user is logged in");
-            setLoading(false);
-            navigate('/'); // Redirect to home if no token
+            navigate('/login'); // Redirect to home if no token
             return;
         }
 

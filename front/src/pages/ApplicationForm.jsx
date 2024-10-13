@@ -23,12 +23,11 @@ function ApplicationForm() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch user data if logged in
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
-      return; // No token, skip fetching
+      return;
     }
 
     const fetchUserData = async () => {
@@ -36,7 +35,7 @@ function ApplicationForm() {
         const response = await fetch('http://localhost:5001/api/users', {
           method: 'GET',
           headers: {
-            'Authorization': `${token}`, // Ensure proper format
+            'Authorization': `${token}`,
           },
         });
 
@@ -45,9 +44,6 @@ function ApplicationForm() {
         }
 
         const data = await response.json();
-
-        console.log(data);
-
         setFormData((prevData) => ({
           ...prevData,
           name: data.user.name || '',
@@ -62,14 +58,13 @@ function ApplicationForm() {
         setError('Could not fetch user data');
         console.error(error);
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
 
     fetchUserData();
-  }, []); // Empty dependency array to run on component mount
+  }, []);
 
-  // Handle form data changes
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -78,7 +73,6 @@ function ApplicationForm() {
     }));
   };
 
-  // Handle file change
   const handleFileChange = (e) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -86,7 +80,6 @@ function ApplicationForm() {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Implement form submission logic here
@@ -94,27 +87,21 @@ function ApplicationForm() {
 
   const handleApply = async (event) => {
     event.preventDefault();
-
-    // Construire formData avec les valeurs actuelles
     const submissionData = {
-      adId: "1",  // Récupérer l'ID de l'annonce si disponible
-      publisherId: "1",  // Récupérer l'ID du publisher si disponible
-      userId: "1",  // Vous pouvez récupérer cet ID s'il est disponible
-      // adId: jobData?.id,  // Récupérer l'ID de l'annonce si disponible
-      // publisherId: jobData?.publisherId,  // Récupérer l'ID du publisher si disponible
-      // userId: null,  // Vous pouvez récupérer cet ID s'il est disponible
-      name: formData.name,  // Nom de l'utilisateur
-      lastName: formData.lastName,  // Prénom
-      email: formData.email,  // Email
-      phoneNumber: formData.contactInformations,  // Numéro de téléphone ou autre contact
-      city: formData.city,  // Ville
-      country: formData.country,  // Pays
-      zipcode: formData.zipcode,  // Code postal
-      message: formData.message,  // Message de l'utilisateur
-      resume: "",  // Fichier de CV (si besoin)
+      adId: jobData?.id || "1",
+      publisherId: jobData?.publisherId || "1",
+      userId: "1",
+      name: formData.name,
+      lastName: formData.lastName,
+      email: formData.email,
+      phoneNumber: formData.contactInformations,
+      city: formData.city,
+      country: formData.country,
+      zipcode: formData.zipcode,
+      message: formData.message,
+      resume: "",
     };
 
-    // Vérifier si vous devez envoyer le fichier "resume"
     const formBody = new FormData();
     Object.keys(submissionData).forEach((key) => {
       if (submissionData[key] !== null) {
@@ -122,8 +109,6 @@ function ApplicationForm() {
       }
     });
 
-    console.log(JSON.stringify(submissionData))
-    // Envoyer les données via POST au backend Flask
     try {
       const response = await fetch("http://localhost:5001/api/apply", {
         headers: {
@@ -135,66 +120,23 @@ function ApplicationForm() {
 
       const result = await response.json();
       if (response.ok) {
-        console.log("Application réussie:", result);
-        alert(result.message)
+        console.log("Application successful:", result);
+        alert(result.message);
       } else {
-        console.error("Erreur lors de l'application:", result);
-        alert(result.error)
+        console.error("Error during application:", result);
+        alert(result.error);
       }
     } catch (error) {
-      console.error("Erreur lors de la requête:", error);
+      console.error("Error during request:", error);
     }
   };
-
 
   return (
     <div className="container-fluid">
       <NavigationHeader />
-
       <div className="row">
-        {/* Form Column on the Left */}
-        <div className="col-md-6">
-          <form className="row g-3" onSubmit={handleSubmit}>
-            {['name', 'lastName', 'email', 'contactInformations', 'city', 'country', 'zipcode'].map((field, index) => (
-              <div className="col-md-6" key={index}>
-                <label htmlFor={field} className="form-label">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  disabled={loading} // Disable input while loading
-                  placeholder={loading ? 'Loading...' : ''}
-                />
-              </div>
-            ))}
-            <div className="mb-3">
-              <label htmlFor="message" className="form-label">Message</label>
-              <textarea
-                className="form-control"
-                id="message"
-                rows="3"
-                value={formData.message}
-                onChange={handleChange}
-                disabled={loading} // Disable textarea while loading
-                placeholder={loading ? 'Loading...' : ''}
-              ></textarea>
-            </div>
-            <div className="mb-3">
-              <label htmlFor="formFile" className="form-label">Upload Resume</label>
-              <input className="form-control" type="file" id="formFile" onChange={handleFileChange} />
-            </div>
-            <div className="d-flex justify-content-center">
-              <button type="submit" className='btn btn-primary' disabled={loading} onClick={handleApply}>Submit Application</button>
-            </div>
-          </form>
-          {loading && <p className="text-muted">Fetching user data...</p>} {/* Loading message */}
-          {error && <p className="text-danger">{error}</p>} {/* Error message */}
-        </div>
-
-        {/* Job Information Column on the Right */}
-        <div className="col-md-6">
+        {/* Job Information Column */}
+        <div className="col-12 col-md-6 order-md-2">
           {jobData ? (
             <div className="card mb-3">
               <div className="card-body">
@@ -209,6 +151,47 @@ function ApplicationForm() {
           ) : (
             <p>Loading job information...</p>
           )}
+        </div>
+
+        {/* Form Column */}
+        <div className="col-12 col-md-6 order-md-1">
+          <form className="row g-3" onSubmit={handleSubmit}>
+            {['name', 'lastName', 'email', 'contactInformations', 'city', 'country', 'zipcode'].map((field, index) => (
+              <div className="col-md-6" key={index}>
+                <label htmlFor={field} className="form-label">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  disabled={loading}
+                  placeholder={loading ? 'Loading...' : ''}
+                />
+              </div>
+            ))}
+            <div className="mb-3">
+              <label htmlFor="message" className="form-label">Message</label>
+              <textarea
+                className="form-control"
+                id="message"
+                rows="3"
+                value={formData.message}
+                onChange={handleChange}
+                disabled={loading}
+                placeholder={loading ? 'Loading...' : ''}
+              ></textarea>
+            </div>
+            <div className="mb-3">
+              <label htmlFor="formFile" className="form-label">Upload Resume</label>
+              <input className="form-control" type="file" id="formFile" onChange={handleFileChange} />
+            </div>
+            <div className="d-flex justify-content-center">
+              <button type="submit" className='btn' style={{ backgroundColor: '#1178be', color: 'white' }} disabled={loading} onClick={handleApply}>Submit Application</button>
+            </div>
+          </form>
+          {loading && <p className="text-muted">Fetching user data...</p>}
+          {error && <p className="text-danger">{error}</p>}
         </div>
       </div>
     </div>

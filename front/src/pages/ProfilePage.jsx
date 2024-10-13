@@ -3,22 +3,27 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import ProfilePhoto from "../assets/ProfilePhoto.png";
 import './Style.css';
 import NavigationHeader from '../components/Header';
+import { useNavigate } from 'react-router-dom';
+
 
 function ProfilePage() {
     const [userData, setUserData] = useState({
-        name: localStorage.getItem('username') || '', // Get username from localStorage
-        email: localStorage.getItem('email') || ''
+        name: localStorage.getItem('username') || '',
+        lastname: localStorage.getItem('lastName') || '',
+        email: localStorage.getItem('email') || '',
+        description: localStorage.getItem('description') || '', 
+        title: localStorage.getItem('title') || ''
     });
     const [loading, setLoading] = useState(true); // State to manage loading state
     const [error, setError] = useState(null); // State to handle errors
+    const navigate = useNavigate(); // Define navigate using useNavigate hook
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        console.log(token)
         if (!token) {
-            setError("No user is logged in");
-            setLoading(false);
-            return;
+            setLoading(false); // Set loading to false
+            navigate('/login'); // Redirect to login page if token is not found
+            return; // Stop execution here to avoid calling the fetch function
         }
 
         const fetchUserData = async () => {
@@ -26,11 +31,10 @@ function ProfilePage() {
                 const response = await fetch("http://localhost:5001/api/users", {
                     method: 'GET',
                     headers: {
-                        'Authorization': `${token}`, // Include token for authorization,
+                        'Authorization': `${token}`, // Include token for authorization
                     }
                 });
 
-                console.log(response);
                 if (!response.ok) {
                     throw new Error('Failed to fetch user data');
                 }
@@ -49,7 +53,7 @@ function ProfilePage() {
         };
 
         fetchUserData();
-    }, []); // Dependency array is empty to run only once on mount
+    }, [navigate]); // Dependency array includes 'navigate'
 
     if (loading) {
         return <div>Loading...</div>; // Show loading message
@@ -64,33 +68,49 @@ function ProfilePage() {
             <NavigationHeader />
             <div className="row">
                 <div className="col-md-4">
-                    <div className="card d-flex justify-content-center">
-                        <img src={ProfilePhoto} className="card-img-top" alt="Profile Logo" />
-                        <div className="card profilecontainer">
-                            <h5 className="card-title">{`${userData.name}`}</h5>
-                            <p className="card-text">
-                                Hi! My name is {userData.name || "..."}. You can contact me at {userData.email || "..."}.
+                    <div className="card profilecard d-flex justify-content-center align-items-center mb-3" style={{ height: '100%'}}>
+                        <img src={ProfilePhoto} className="card-img-center" alt="Profile Logo" style={{ width: '200px', height: '200px', objectFit: 'cover'}} />
+                        <div className="card-body">
+                            <h5 className="card-title d-flex justify-content-center align-items-center">{`${userData.name}`}</h5>
+                            <h5 className="card-title d-flex justify-content-center align-items-center">{`${userData.title}`}</h5>
+                            <p className="card-text d-flex justify-content-center align-items-center">
+                                Hi! My name is {userData.name || "..."}. 
+                                {userData.description || "..."}. 
+                                You can contact me at {userData.email || "..."}.
                             </p>
                         </div>
                     </div>
                 </div>
                 <div className="col-md-8">
                     <div className="row">
-                        <div className="col-12 mb-3">
-                            <div className="Saved">Saved</div>
+                        <div className="col-12 mb-3"style={{ height: '100%'}}>
+                            <div className="card">
+                                <div className="card-header" style={{ backgroundColor: '#386fa4', color:'white'}}>Saved Ads:</div>
+                                <div className="card-body">
+                                    <p>No saved ads yet.</p>
+                                </div>
+                            </div>
                         </div>
                         <div className="col-12 mb-3">
-                            <div className="Notes">Notes</div>
+                            <div className="card">
+                                <div className="card-header" style={{ backgroundColor: '#386fa4', color:'white'}}>Notes:</div>
+                                <div className="card-body d-flex flex-column" style={{ height: '100%' }}>
+                                    <textarea 
+                                        className="form-control" 
+                                        style={{ flex: 1 }} 
+                                        placeholder="Write your notes here..."
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="col-12 mb-3">
+                            <div className="card" style={{ height: '100%' }}>
+                                <div className="card-header" style={{ backgroundColor: '#386fa4', color:'white'}}>Reminders</div>
+                                <div className="card-body">You are doing great! Keep on going.</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-md-6 mb-3">
-                    <div className="Reminders" style={{ height: '150px' }}>Reminders</div>
-                </div>
-                <div className="col-md-6 mb-3">
-                    <div className="calendar" style={{ height: '150px' }}>Calendar</div>
                 </div>
             </div>
         </div>

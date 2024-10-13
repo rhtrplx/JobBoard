@@ -4,6 +4,7 @@ import './Style.css';
 import { useNavigate } from 'react-router-dom';
 import NavigationHeader from '../components/Header';
 import ApplyNowButton from '../components/ApplyNow';
+import LogoutButton from '../components/Logout';
 
 function HomePage() {
   const [expanded, setExpanded] = useState(null);
