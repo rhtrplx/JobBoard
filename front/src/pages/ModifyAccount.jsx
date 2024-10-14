@@ -80,31 +80,23 @@ function ModifyAccount() {
     e.preventDefault();
     setErrorMessage('');
 
+    // Vérification du mot de passe s'il est modifié
     if (formData.password && !validatePassword(formData.password)) {
       setErrorMessage('Password must be at least 8 characters long, contain at least one letter and one number.');
       return;
     }
 
-    const updatedData = Object.keys(formData).reduce((acc, key) => {
-      if (formData[key] !== originalData[key]) {
-        acc[key] = formData[key];
-      }
-      return acc;
-    }, {});
-
-    if (Object.keys(updatedData).length === 0) {
-      setErrorMessage('No changes made to update.');
-      return;
-    }
+    // Envoyer toutes les données, même si elles n'ont pas changé
+    const updatedData = { ...formData };
 
     try {
-      const response = await fetch("http://localhost:5001/api/users", {
+      const response = await fetch("http://localhost:5001/api/update_account", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem('token')}`,
+          "Authorization": `${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(updatedData), // Envoyer toutes les données du formulaire
       });
 
       if (!response.ok) {
@@ -191,7 +183,7 @@ function ModifyAccount() {
             {errorMessage && <div className="alert alert-danger text-center">{errorMessage}</div>}
 
             <div className="col-12 d-flex justify-content-center mt-3">
-              <button type="submit" className="btn btn-primary" style={{marginBottom: '20px'}}>Save Changes</button>
+              <button type="submit" className="btn btn-primary" style={{ marginBottom: '20px' }}>Save Changes</button>
             </div>
           </form>
         )}

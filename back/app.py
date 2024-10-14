@@ -236,38 +236,6 @@ def update_account_handler():
 
     # Récupérer les données envoyées depuis React
     data = request.json
-    # TODO support profile pictures
-    email = data.get("email")
-    password = data.get("password")
-    name = data.get("name")
-    lastName = data.get("lastName")
-    city = data.get("city")
-    country = data.get("country")
-    zipcode = data.get("zipcode")
-    description = data.get("description")
-    birthdate = data.get("birthdate")
-    title = data.get("title")
-    contactInformations = data.get("contactInformations")
-    savedAdsIds = 1
-    username = data.get("username")
-
-    # Vérifier que les informations sont présentes
-    if (
-        not email
-        or not password
-        or not name
-        or not lastName
-        or not city
-        or not country
-        or not zipcode
-        or not description
-        or not birthdate
-        or not title
-        or not contactInformations
-        or not savedAdsIds
-        or not username
-    ):
-        return jsonify({"error": "Please provide every info."}), 400
 
     # Vérifier si l'utilisateur existe en utilisant le token
     check_query = "SELECT * FROM users WHERE token = %s"
@@ -277,6 +245,25 @@ def update_account_handler():
 
     if not existing_user:
         return jsonify({"error": "User not found."}), 404
+
+    # Utiliser les anciennes valeurs si certaines données sont manquantes
+    email = data.get("email", existing_user["email"])
+    password = data.get(
+        "password", existing_user["password"]
+    )  # Il faut peut-être hacher le mot de passe
+    name = data.get("name", existing_user["name"])
+    lastName = data.get("lastName", existing_user["lastName"])
+    city = data.get("city", existing_user["city"])
+    country = data.get("country", existing_user["country"])
+    zipcode = data.get("zipcode", existing_user["zipcode"])
+    description = data.get("description", existing_user["description"])
+    birthdate = data.get("birthdate", existing_user["birthdate"])
+    title = data.get("title", existing_user["title"])
+    contactInformations = data.get(
+        "contactInformations", existing_user["contactInformations"]
+    )
+    savedAdsIds = existing_user["savedAdsIds"]
+    username = data.get("username", existing_user["username"])
 
     # Mettre à jour l'utilisateur dans la base de données
     update_query = """
@@ -302,7 +289,7 @@ def update_account_handler():
                 contactInformations,
                 savedAdsIds,
                 username,
-                token,  # token en tant que condition pour l'update
+                token,
             ),
         )
         cnx.commit()  # Confirmer la mise à jour
