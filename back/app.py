@@ -201,7 +201,15 @@ def signup_handler():
         cnx.commit()  # Confirmer l'insertion
 
         # Retourner les informations de l'utilisateur avec le token
-        return jsonify({"message": "Success Signup!", "token": token}), 201
+
+        query = "SELECT * FROM users WHERE token = %s"
+        cursor = cnx.cursor(dictionary=True)
+        cursor.execute(query, (token,))
+        user = cursor.fetchone()
+        return (
+            jsonify({"message": "Success Signup!", "token": token, "user": user}),
+            201,
+        )
     except mysql.connector.Error as err:
         print(f"An error occurred while accessing the DB: {err}")
         cnx.rollback()  # Annuler l'insertion si une erreur survient
