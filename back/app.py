@@ -124,7 +124,6 @@ def signup_handler():
     username = data.get("username")
     # xxx = data.get("xxx")
 
-    # email, password, confirmPassword, name, lastName, city, country, zipcode, description, birthdate, title, contactInformations, username
     # Vérifier que les informations sont présentes
     if (
         not email
@@ -153,6 +152,7 @@ def signup_handler():
         return jsonify({"error": "This email is already used."}), 409
 
     # TODO try if this works
+    # Vérifier si le nom d'utilisateur existe déjà
     check_query = "SELECT * FROM users WHERE username = %s"
     cursor.execute(check_query, (username,))
     existing_user = cursor.fetchone()
@@ -163,8 +163,21 @@ def signup_handler():
     # Hacher le mot de passe avant de l'enregistrer dans la base de données
     hashed_password = hash_password(password)
 
-    # Insérer le nouvel utilisateur dans la base de données
-    insert_query = "INSERT INTO `users` (`id`, `email`, `password`, `name`, `lastName`, `city`, `country`, `zipcode`, `description`, `birthdate`, `title`, `contactInformations`, `savedAdsIds`, `username`, `token`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '')"
+    # Génération du token JWT
+    payload_data = {
+        "sub": email,  # Utilisation de l'email comme identifiant du souscripteur
+        "name": name,
+        "nickname": username,
+    }
+
+    my_secret = "rachidleplusbeau"
+    token = jwt.encode(payload=payload_data, key=my_secret)
+
+    # Insérer le nouvel utilisateur dans la base de données avec le token
+    insert_query = """
+        INSERT INTO `users` (`id`, `email`, `password`, `name`, `lastName`, `city`, `country`, `zipcode`, `description`, `birthdate`, `title`, `contactInformations`, `savedAdsIds`, `username`, `token`)
+        VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
     try:
         cursor.execute(
             insert_query,
@@ -182,12 +195,15 @@ def signup_handler():
                 contactInformations,
                 savedAdsIds,
                 username,
+                token,  # Stocker le token dans la base de données
             ),
         )
         cnx.commit()  # Confirmer l'insertion
-        return jsonify({"message": "Success Signup !"}), 201
+
+        # Retourner les informations de l'utilisateur avec le token
+        return jsonify({"message": "Success Signup!", "token": token}), 201
     except mysql.connector.Error as err:
-        print(f"An error occurred while accessing the DB : {err}")
+        print(f"An error occurred while accessing the DB: {err}")
         cnx.rollback()  # Annuler l'insertion si une erreur survient
         return jsonify({"error": "An error occurred on Signup."}), 500
     finally:
@@ -203,6 +219,13 @@ def update_account_handler():
         database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
         use_pure=False,
     )
+
+    # Récupérer le token envoyé dans les headers
+    token = request.headers.get("Authorization")
+
+    if not token:
+        return jsonify({"error": "Authorization token required"}), 401
+
     # Récupérer les données envoyées depuis React
     data = request.json
     # TODO support profile pictures
@@ -238,10 +261,10 @@ def update_account_handler():
     ):
         return jsonify({"error": "Please provide every info."}), 400
 
-    # Vérifier si l'utilisateur existe déjà dans la base de données
-    check_query = "SELECT * FROM users WHERE email = %s"
+    # Vérifier si l'utilisateur existe en utilisant le token
+    check_query = "SELECT * FROM users WHERE token = %s"
     cursor = cnx.cursor(dictionary=True)
-    cursor.execute(check_query, (email,))
+    cursor.execute(check_query, (token,))
     existing_user = cursor.fetchone()
 
     if not existing_user:
@@ -250,14 +273,15 @@ def update_account_handler():
     # Mettre à jour l'utilisateur dans la base de données
     update_query = """
         UPDATE `users`
-        SET `password` = %s, `name` = %s, `lastName` = %s, `city` = %s, `country` = %s, `zipcode` = %s, `description` = %s, 
+        SET `email` = %s, `password` = %s, `name` = %s, `lastName` = %s, `city` = %s, `country` = %s, `zipcode` = %s, `description` = %s, 
             `birthdate` = %s, `title` = %s, `contactInformations` = %s, `savedAdsIds` = %s, `username` = %s
-        WHERE `email` = %s
+        WHERE `token` = %s
     """
     try:
         cursor.execute(
             update_query,
             (
+                email,
                 password,
                 name,
                 lastName,
@@ -270,7 +294,7 @@ def update_account_handler():
                 contactInformations,
                 savedAdsIds,
                 username,
-                email,  # email en tant que condition pour l'update
+                token,  # token en tant que condition pour l'update
             ),
         )
         cnx.commit()  # Confirmer la mise à jour
