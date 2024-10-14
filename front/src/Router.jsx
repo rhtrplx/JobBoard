@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import ApplicationForm from './pages/ApplicationForm';
 import ModifyAccount from './pages/ModifyAccount';
+import AdminPage from './pages/AdminPage';
 
 const WebRouter = () => {
   return (   
@@ -18,6 +19,7 @@ const WebRouter = () => {
       <Route path="/profile" element={<ProfilePage/>} />
       <Route path="/applicationform" element={<ApplicationForm/>} />
       <Route path="/modify" element={<ModifyAccount/>} />
+      <Route path="/admin" element={<AdminPage/>} />
     </Routes>
     </Router>
 );

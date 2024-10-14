@@ -26,7 +26,7 @@ const NavigationHeader = ({ loggedInUser }) => { // Accept loggedInUser as a pro
     setTimeout(() => {
       setShowAlert(false); // Hide the alert after 2 seconds
       navigate("/"); // Redirect after showing alert
-    }, 2000);
+    }, 1000);
   };
 
   const toggleDropdown = () => {

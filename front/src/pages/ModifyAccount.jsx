@@ -22,6 +22,7 @@ function ModifyAccount() {
   const [originalData, setOriginalData] = useState({ ...formData });
   const [errorMessage, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false); // Modal visibility state
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -39,14 +40,16 @@ function ModifyAccount() {
 
         const data = await response.json();
 
-        // Update form data based on the fetched user data
+        // Ensure birthdate is in the correct format (YYYY-MM-DD)
+        const formattedBirthdate = new Date(data.user.birthdate).toISOString().split('T')[0];
+
         setFormData({
           name: data.user.name || '',
           lastName: data.user.lastName || '',
           email: data.user.email || '',
           contactInformations: data.user.contactInformations || '',
-          password: '', // do not autofill
-          birthdate: data.user.birthdate || '',
+          password: '', // Do not autofill password
+          birthdate: formattedBirthdate,  // Correct format
           title: data.user.title || '',
           description: data.user.description || '',
           city: data.user.city || '',
@@ -54,7 +57,7 @@ function ModifyAccount() {
           zipcode: data.user.zipcode || '',
           username: data.user.username || '',
         });
-        setOriginalData(data.user); // Set original data for comparison
+        setOriginalData(data.user);
       } catch (error) {
         console.error('Error fetching user data:', error);
         setErrorMessage('Failed to fetch user data');
@@ -80,19 +83,16 @@ function ModifyAccount() {
     e.preventDefault();
     setErrorMessage('');
 
-    // Vérification du mot de passe s'il est modifié
     if (formData.password && !validatePassword(formData.password)) {
       setErrorMessage('Password must be at least 8 characters long, contain at least one letter and one number.');
       return;
     }
 
-    // Convertir la date en format 'YYYY-MM-DD'
     const formattedBirthdate = new Date(formData.birthdate).toISOString().split('T')[0];
 
-    // Mettre à jour les données avec la date correctement formatée
     const updatedData = {
       ...formData,
-      birthdate: formattedBirthdate,  // Format de date compatible avec MySQL
+      birthdate: formattedBirthdate,
     };
 
     try {
@@ -111,7 +111,14 @@ function ModifyAccount() {
 
       const data = await response.json();
       console.log('Account updated successfully:', data);
-      navigate("/");
+
+      setShowModal(true); // Show the modal after a successful update
+
+      // Automatically redirect after 3 seconds
+      setTimeout(() => {
+        setShowModal(false); // Hide modal
+        navigate("/profile");
+      }, 1000);
     } catch (error) {
       console.error('Error:', error);
       setErrorMessage('An error occurred while updating your account.');
@@ -194,6 +201,22 @@ function ModifyAccount() {
           </form>
         )}
       </div>
+
+      {/* Modal */}
+      <div className={`modal fade ${showModal ? 'show' : ''}`} id="successModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden={!showModal} style={{ display: showModal ? 'block' : 'none' }}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header" style={{ backgroundColor: '#97cf8a' }}>
+              <h1 className="modal-title fs-5" id="exampleModalLabel">Update Successful!</h1>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body" style={{ backgroundColor: '#acd1af', fontWeight: '25px' }}>
+              Redirecting to the profile page.
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }

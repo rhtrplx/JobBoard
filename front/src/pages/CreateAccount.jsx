@@ -28,50 +28,59 @@ function CreateAccount() {
     setFormData({ ...formData, [id]: value });
   };
 
+  const validatePassword = (password) => {
+    const passwordRules = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRules.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Button clicked!"); // Debugging line
-  
-    try {
-        const response = await fetch("http://localhost:5001/api/signup", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        });
-  
-        const data = await response.json();
-  
-        if (!response.ok) {
-            throw new Error(data.error || 'Failed to create account');
-        }
-  
-        // Assuming the API returns a token on successful signup
-        const token = data.token; // Adjust this according to your API response structure
-        localStorage.setItem('token', token); // Store token in local storage
-  
-        // Save the user's name directly from formData to local storage
-        localStorage.setItem('name', formData.name); // Save name
 
-        setAlertMessage('Account successfully created!');
-        setShowAlert(true);
-  
-        setTimeout(() => {
-            navigate("/"); // Navigate to home or desired route
-        }, 2000);
-  
-    } catch (error) {
-        console.error('Error:', error);
-        setAlertMessage(error.message || 'Error: Failed to create account.');
-        setShowAlert(true);
+    // Check if the password is valid
+    if (!validatePassword(formData.password)) {
+      setAlertMessage('Password must be at least 8 characters long and contain at least one letter and one number.');
+      setShowAlert(true);
+      return;
     }
-};
 
-  
+    try {
+      const response = await fetch("http://localhost:5001/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create account');
+      }
+
+      // Assuming the API returns a token on successful signup
+      const token = data.token; // Adjust this according to your API response structure
+      localStorage.setItem('token', token); // Store token in local storage
+
+      // Save the user's name directly from formData to local storage
+      localStorage.setItem('name', formData.name);
+
+      setAlertMessage('Account successfully created!');
+      setShowAlert(true);
+
+      setTimeout(() => {
+        navigate("/"); // Navigate to home or desired route
+      }, 2000);
+    } catch (error) {
+      console.error('Error:', error);
+      setAlertMessage(error.message || 'Error: Failed to create account.');
+      setShowAlert(true);
+    }
+  };
+
   return (
     <div>
-      <NavigationHeader/>
+      <NavigationHeader />
 
       {showAlert && (
         <div className="container mt-3">
@@ -137,11 +146,9 @@ function CreateAccount() {
             </div>
           </div>
 
-          {/* Create Account Button */}
           <div className="col-12 d-flex justify-content-center mt-3">
             <button type="submit" className="btn btn-primary">Create an Account</button>
           </div>
-
         </form>
       </div>
     </div>
