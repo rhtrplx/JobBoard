@@ -246,26 +246,55 @@ def update_account_handler():
     if not existing_user:
         return jsonify({"error": "User not found."}), 404
 
-    # Utiliser les anciennes valeurs si certaines données sont manquantes
+    # Validation de la date (YYYY-MM-DD)
+    def is_valid_date(date_string):
+        try:
+            from datetime import datetime
+
+            datetime.strptime(date_string, "%Y-%m-%d")
+            return True
+        except ValueError:
+            return False
+
+    # Validation du mot de passe (au moins 8 caractères, une lettre, un chiffre)
+    def is_valid_password(password):
+        import re
+
+        password_rules = re.compile(r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$")
+        return password_rules.match(password) is not None
+
+    # Utiliser les anciennes valeurs si certaines données sont manquantes ou invalides
     email = data.get("email", existing_user["email"])
-    password = data.get(
-        "password", existing_user["password"]
-    )  # Il faut peut-être hacher le mot de passe
+
+    password = data.get("password")
+    if password and is_valid_password(password):
+        hashed_password = hash_password(password)
+    else:
+        hashed_password = existing_user[
+            "password"
+        ]  # Garder l'ancien mot de passe si non fourni ou non valide
+
     name = data.get("name", existing_user["name"])
     lastName = data.get("lastName", existing_user["lastName"])
     city = data.get("city", existing_user["city"])
     country = data.get("country", existing_user["country"])
     zipcode = data.get("zipcode", existing_user["zipcode"])
     description = data.get("description", existing_user["description"])
-    birthdate = data.get("birthdate", existing_user["birthdate"])
+
+    birthdate = data.get("birthdate")
+    if birthdate and is_valid_date(birthdate):
+        formatted_birthdate = birthdate
+    else:
+        formatted_birthdate = existing_user[
+            "birthdate"
+        ]  # Garder l'ancienne date si non fournie ou non valide
+
     title = data.get("title", existing_user["title"])
     contactInformations = data.get(
         "contactInformations", existing_user["contactInformations"]
     )
-    savedAdsIds = existing_user["savedAdsIds"]
+    savedAdsIds = existing_user["savedAdsIds"]  # Static, ne change pas ici
     username = data.get("username", existing_user["username"])
-
-    hashed_password = hash_password(password)
 
     # Mettre à jour l'utilisateur dans la base de données
     update_query = """
@@ -286,7 +315,7 @@ def update_account_handler():
                 country,
                 zipcode,
                 description,
-                birthdate,
+                formatted_birthdate,
                 title,
                 contactInformations,
                 savedAdsIds,
