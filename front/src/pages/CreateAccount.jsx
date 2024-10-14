@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate } from 'react-router-dom';
 import logo from "../assets/Logo.png";
-import CreateAccountButton from '../components/CreateAccount';
 import './Style.css';
+import NavigationHeader from '../components/Header';
 
-function FrontPage() {
-  const navigate = useNavigate(); // Initialize useNavigate
+function CreateAccount() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     lastName: '',
@@ -20,53 +20,67 @@ function FrontPage() {
     contactInformations: '',
     username: '',
   });
+  const [alertMessage, setAlertMessage] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
-  // Handle input changes
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
-
+    e.preventDefault();
+    console.log("Button clicked!"); // Debugging line
+  
     try {
-      const response = await fetch("http://localhost:5001/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+        const response = await fetch("http://localhost:5001/api/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+  
+        const data = await response.json();
+  
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to create account');
+        }
+  
+        // Assuming the API returns a token on successful signup
+        const token = data.token; // Adjust this according to your API response structure
+        localStorage.setItem('token', token); // Store token in local storage
+  
+        // Save the user's name directly from formData to local storage
+        localStorage.setItem('name', formData.name); // Save name
 
-      if (!response.ok) {
-        throw new Error('Failed to sign up');
-      }
-
-      const data = await response.json();
-      console.log('Success:', data);
-
-      // Navigate to home after successful signup
-      navigate("/");
-
+        setAlertMessage('Account successfully created!');
+        setShowAlert(true);
+  
+        setTimeout(() => {
+            navigate("/"); // Navigate to home or desired route
+        }, 2000);
+  
     } catch (error) {
-      console.error('Error:', error);
+        console.error('Error:', error);
+        setAlertMessage(error.message || 'Error: Failed to create account.');
+        setShowAlert(true);
     }
-  };
+};
 
+  
   return (
     <div>
-      {/* Navbar with Logo */}
-      <nav className="navbar navbar-expand-lg">
-        <div className="container d-flex justify-content-center align-items-center">
-          <a className="navbar-brand">
-            <img src={logo} alt="Logo" width="120" height="120" />
-          </a>
-        </div>
-      </nav>
+      <NavigationHeader/>
 
-      {/* Form Section */}
+      {showAlert && (
+        <div className="container mt-3">
+          <div className="alert alert-primary" role="alert">
+            {alertMessage}
+          </div>
+        </div>
+      )}
+
       <div className="container mt-4">
         <form className="row g-3 d-flex justify-content-center" onSubmit={handleSubmit}>
           <div className="col-md-6">
@@ -122,15 +136,16 @@ function FrontPage() {
               <input type="text" className="form-control" id="zipcode" value={formData.zipcode} onChange={handleChange} />
             </div>
           </div>
-          
+
+          {/* Create Account Button */}
           <div className="col-12 d-flex justify-content-center mt-3">
-            <CreateAccountButton onClick={handleSubmit} />
+            <button type="submit" className="btn btn-primary">Create an Account</button>
           </div>
-          
+
         </form>
       </div>
     </div>
   );
 }
 
-export default FrontPage;
+export default CreateAccount;

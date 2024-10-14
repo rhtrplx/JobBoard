@@ -5,6 +5,7 @@ function SubmitButton({handleSubmit}) {
     <button type="submit" className="btn" style={{ backgroundColor: '#1178be', color: 'white' }}>
     Log in
     </button>
+    
     );
 }
 

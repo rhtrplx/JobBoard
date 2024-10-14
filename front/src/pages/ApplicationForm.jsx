@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Style.css';
 import NavigationHeader from '../components/Header';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function ApplicationForm() {
   const location = useLocation();
   const jobData = location.state?.jobData;
+  const navigate = useNavigate(); // To navigate to the home page after submission
 
   const [formData, setFormData] = useState({
     name: '',
@@ -22,6 +23,7 @@ function ApplicationForm() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false); // To control modal visibility
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -80,11 +82,6 @@ function ApplicationForm() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Implement form submission logic here
-  };
-
   const handleApply = async (event) => {
     event.preventDefault();
     const submissionData = {
@@ -121,7 +118,10 @@ function ApplicationForm() {
       const result = await response.json();
       if (response.ok) {
         console.log("Application successful:", result);
-        alert(result.message);
+        setShowModal(true); // Show success modal
+        setTimeout(() => {
+          navigate("/"); // Redirect to home after 3 seconds
+        }, 3000);
       } else {
         console.error("Error during application:", result);
         alert(result.error);
@@ -155,7 +155,7 @@ function ApplicationForm() {
 
         {/* Form Column */}
         <div className="col-12 col-md-6 order-md-1">
-          <form className="row g-3" onSubmit={handleSubmit}>
+          <form className="row g-3" onSubmit={handleApply}>
             {['name', 'lastName', 'email', 'contactInformations', 'city', 'country', 'zipcode'].map((field, index) => (
               <div className="col-md-6" key={index}>
                 <label htmlFor={field} className="form-label">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
@@ -187,13 +187,29 @@ function ApplicationForm() {
               <input className="form-control" type="file" id="formFile" onChange={handleFileChange} />
             </div>
             <div className="d-flex justify-content-center">
-              <button type="submit" className='btn' style={{ backgroundColor: '#1178be', color: 'white' }} disabled={loading} onClick={handleApply}>Submit Application</button>
+              <button type="submit" className='btn' style={{ backgroundColor: '#1178be', color: 'white' }} disabled={loading}>Submit Application</button>
             </div>
           </form>
           {loading && <p className="text-muted">Fetching user data...</p>}
           {error && <p className="text-danger">{error}</p>}
         </div>
       </div>
+
+      {/* Modal */}
+      <div className={`modal fade ${showModal ? 'show' : ''}`} id="successModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden={!showModal} style={{ display: showModal ? 'block' : 'none'}}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header" style={{backgroundColor:'#97cf8a'}}>
+              <h1 className="modal-title fs-5" id="exampleModalLabel">Application Successful!</h1>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body" style={{backgroundColor:'#acd1af', fontWeight:'25px'}}>
+              Redirecting to home page.
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }

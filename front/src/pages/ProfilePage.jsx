@@ -68,7 +68,7 @@ function ProfilePage() {
             <NavigationHeader />
             <div className="row">
                 <div className="col-md-4">
-                    <div className="card profilecard d-flex justify-content-center align-items-center mb-3" style={{ height: '100%'}}>
+                    <div className="card profilecard d-flex justify-content-center align-items-center mb-3" style={{ height: '100%', borderStyle: 'dotted' }}>
                         <img src={ProfilePhoto} className="card-img-center" alt="Profile Logo" style={{ width: '200px', height: '200px', objectFit: 'cover'}} />
                         <div className="card-body">
                             <h5 className="card-title d-flex justify-content-center align-items-center">{`${userData.name}`}</h5>

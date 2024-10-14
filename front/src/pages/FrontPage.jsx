@@ -4,6 +4,7 @@ import SubmitButton from '../components/SubmitButton';
 import logo from "../assets/Logo.png";
 import './Style.css';
 import { Link } from 'react-router-dom';
+import NavigationHeader from '../components/Header';
 
 function FrontPage() {
   const [email, setEmail] = useState("");
@@ -64,13 +65,7 @@ function FrontPage() {
   return (
     <div>
       {/* Navbar with Logo */}
-      <nav className="navbar navbar-expand-lg">
-        <div className="container d-flex justify-content-center align-items-center">
-          <a className="navbar-brand" href="#">
-            <img src={logo} alt="Logo" width="120" height="120" />
-          </a>
-        </div>
-      </nav>
+      <NavigationHeader/>
 
       {/* Form */}
       <div className="d-flex justify-content-center align-items-top min-vh-100">
