@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, abort
 from flask_cors import CORS
 import mysql.connector, time
 import jwt
+import bcrypt  # Importation de bcrypt pour le hachage des mots de passe
 
 # Connexion à la base de données MySQL définie dans Docker Compose
 
@@ -17,7 +18,16 @@ cnx = mysql.connector.connect(
 
 app = Flask(__name__)
 CORS(app)  # Permettre toutes les origines par défaut
-# flask jwt
+
+
+# Génération d'un hash sécurisé pour le mot de passe
+def hash_password(password):
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
+
+
+# Vérification d'un mot de passe avec le hash
+def check_password(password, hashed):
+    return bcrypt.checkpw(password.encode("utf-8"), hashed)
 
 
 @app.route("/api/login", methods=["POST"])
@@ -40,13 +50,27 @@ def login_handler():
         return jsonify({"error": "You must enter an email and a password."}), 400
 
     # Requête SQL pour vérifier les informations d'identification
-    query = "SELECT * FROM users WHERE email = %s AND password = %s"
+    query = "SELECT * FROM users WHERE email = %s"
     cursor = cnx.cursor(dictionary=True)
-    cursor.execute(query, (email, password))
+    cursor.execute(query, (email,))
     user = cursor.fetchone()
 
     # Vérifier si l'utilisateur existe
     if not user:
+        return jsonify({"error": "Email or Password incorrect."}), 401
+
+    # Vérifiez que le hash du mot de passe est bien récupéré
+    hashed_password = user.get("password")
+
+    if not hashed_password:
+        return jsonify({"error": "Password not found in database."}), 500
+
+    # Assurez-vous que hashed_password est de type string
+    if isinstance(hashed_password, str):
+        hashed_password = hashed_password.encode("utf-8")  # Encoder le hash pour bcrypt
+
+    # Vérifiez si le mot de passe est correct
+    if not check_password(password, hashed_password):
         return jsonify({"error": "Email or Password incorrect."}), 401
 
     # Génération du token JWT
@@ -126,25 +150,27 @@ def signup_handler():
     existing_user = cursor.fetchone()
 
     if existing_user:
-        return jsonify({"error": "This email is alread used."}), 409
+        return jsonify({"error": "This email is already used."}), 409
 
     # TODO try if this works
     check_query = "SELECT * FROM users WHERE username = %s"
-    cursor = cnx.cursor(dictionary=True)
     cursor.execute(check_query, (username,))
     existing_user = cursor.fetchone()
 
     if existing_user:
-        return jsonify({"error": "This username is alread used."}), 409
+        return jsonify({"error": "This username is already used."}), 409
+
+    # Hacher le mot de passe avant de l'enregistrer dans la base de données
+    hashed_password = hash_password(password)
 
     # Insérer le nouvel utilisateur dans la base de données
-    insert_query = "INSERT INTO `users` (`id`, `email`, `password`, `name`, `lastName`, `city`, `country`, `zipcode`, `description`, `birthdate`, `title`, `contactInformations`, `savedAdsIds`, `username`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    insert_query = "INSERT INTO `users` (`id`, `email`, `password`, `name`, `lastName`, `city`, `country`, `zipcode`, `description`, `birthdate`, `title`, `contactInformations`, `savedAdsIds`, `username`, `token`) VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '')"
     try:
         cursor.execute(
             insert_query,
             (
                 email,
-                password,
+                hashed_password.decode("utf-8"),  # Stocker le hash en tant que string
                 name,
                 lastName,
                 city,
@@ -161,9 +187,9 @@ def signup_handler():
         cnx.commit()  # Confirmer l'insertion
         return jsonify({"message": "Success Signup !"}), 201
     except mysql.connector.Error as err:
-        print(f"An error occured while accessing the DB : {err}")
+        print(f"An error occurred while accessing the DB : {err}")
         cnx.rollback()  # Annuler l'insertion si une erreur survient
-        return jsonify({"error": "An error occured on Signup."}), 500
+        return jsonify({"error": "An error occurred on Signup."}), 500
     finally:
         cursor.close()
 
