@@ -86,8 +86,14 @@ function ModifyAccount() {
       return;
     }
 
-    // Envoyer toutes les données, même si elles n'ont pas changé
-    const updatedData = { ...formData };
+    // Convertir la date en format 'YYYY-MM-DD'
+    const formattedBirthdate = new Date(formData.birthdate).toISOString().split('T')[0];
+
+    // Mettre à jour les données avec la date correctement formatée
+    const updatedData = {
+      ...formData,
+      birthdate: formattedBirthdate,  // Format de date compatible avec MySQL
+    };
 
     try {
       const response = await fetch("http://localhost:5001/api/update_account", {
@@ -96,7 +102,7 @@ function ModifyAccount() {
           "Content-Type": "application/json",
           "Authorization": `${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify(updatedData), // Envoyer toutes les données du formulaire
+        body: JSON.stringify(updatedData),
       });
 
       if (!response.ok) {
