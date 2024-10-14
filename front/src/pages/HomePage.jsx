@@ -11,6 +11,9 @@ function HomePage() {
   const [ads, setAds] = useState([]);
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
+  
+  // Check if user is authenticated (you may replace this with your actual authentication logic)
+  const isAuthenticated = localStorage.getItem('user'); // Example check for authentication
 
   const toggleExpand = (id) => {
     setExpanded(expanded === id ? null : id);
@@ -41,8 +44,18 @@ function HomePage() {
 
   // Call fetchAds when the component mounts or page changes
   useEffect(() => {
+    // Fetch ads if not authenticated (for example, always allow access to ads)
     fetchAds();
   }, [page]);
+
+  // Redirect if not authenticated and navigate to login if needed
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // Optionally navigate to a login page or show an alert
+      console.log("User is not authenticated");
+      // navigate('/login'); // Uncomment if you want to redirect to login
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="container-fluid">
