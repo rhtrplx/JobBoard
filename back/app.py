@@ -265,6 +265,8 @@ def update_account_handler():
     savedAdsIds = existing_user["savedAdsIds"]
     username = data.get("username", existing_user["username"])
 
+    hashed_password = hash_password(password)
+
     # Mettre à jour l'utilisateur dans la base de données
     update_query = """
         UPDATE `users`
@@ -277,7 +279,7 @@ def update_account_handler():
             update_query,
             (
                 email,
-                password,
+                hashed_password,
                 name,
                 lastName,
                 city,
