@@ -168,7 +168,7 @@ def signup_handler():
         cursor.close()
 
 
-@app.route("/api/update_account", methods=["POST"])
+@app.route("/api/update_account", methods=["PUT"])
 def update_account_handler():
     cnx = mysql.connector.connect(
         user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
