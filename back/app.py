@@ -168,6 +168,95 @@ def signup_handler():
         cursor.close()
 
 
+@app.route("/api/update_account", methods=["POST"])
+def update_account_handler():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="127.0.0.1",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
+    # Récupérer les données envoyées depuis React
+    data = request.json
+    # TODO support profile pictures
+    email = data.get("email")
+    password = data.get("password")
+    name = data.get("name")
+    lastName = data.get("lastName")
+    city = data.get("city")
+    country = data.get("country")
+    zipcode = data.get("zipcode")
+    description = data.get("description")
+    birthdate = data.get("birthdate")
+    title = data.get("title")
+    contactInformations = data.get("contactInformations")
+    savedAdsIds = 1
+    username = data.get("username")
+
+    # Vérifier que les informations sont présentes
+    if (
+        not email
+        or not password
+        or not name
+        or not lastName
+        or not city
+        or not country
+        or not zipcode
+        or not description
+        or not birthdate
+        or not title
+        or not contactInformations
+        or not savedAdsIds
+        or not username
+    ):
+        return jsonify({"error": "Please provide every info."}), 400
+
+    # Vérifier si l'utilisateur existe déjà dans la base de données
+    check_query = "SELECT * FROM users WHERE email = %s"
+    cursor = cnx.cursor(dictionary=True)
+    cursor.execute(check_query, (email,))
+    existing_user = cursor.fetchone()
+
+    if not existing_user:
+        return jsonify({"error": "User not found."}), 404
+
+    # Mettre à jour l'utilisateur dans la base de données
+    update_query = """
+        UPDATE `users`
+        SET `password` = %s, `name` = %s, `lastName` = %s, `city` = %s, `country` = %s, `zipcode` = %s, `description` = %s, 
+            `birthdate` = %s, `title` = %s, `contactInformations` = %s, `savedAdsIds` = %s, `username` = %s
+        WHERE `email` = %s
+    """
+    try:
+        cursor.execute(
+            update_query,
+            (
+                password,
+                name,
+                lastName,
+                city,
+                country,
+                zipcode,
+                description,
+                birthdate,
+                title,
+                contactInformations,
+                savedAdsIds,
+                username,
+                email,  # email en tant que condition pour l'update
+            ),
+        )
+        cnx.commit()  # Confirmer la mise à jour
+        return jsonify({"message": "Account updated successfully!"}), 200
+    except mysql.connector.Error as err:
+        print(f"An error occurred while accessing the DB: {err}")
+        cnx.rollback()  # Annuler la mise à jour si une erreur survient
+        return jsonify({"error": "An error occurred during update."}), 500
+    finally:
+        cursor.close()
+
+
 @app.route("/api/ads", methods=["POST"])
 def ads_handler():
     cnx = mysql.connector.connect(
