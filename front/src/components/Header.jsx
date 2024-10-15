@@ -56,7 +56,7 @@ const NavigationHeader = ({ loggedInUser }) => {
           </div>
 
           {/* Conditionally render buttons */}
-          <ul className="nav nav-pills" style={{ gap: '20px', margin: '0' }}>
+          <ul className="nav nav-pills" style={{ gap: '20px', marginRight: '50px'}}>
             {/* Home button - hidden on home page */}
             {!isHomePage && (
               <li className="nav-item">

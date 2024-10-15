@@ -13,7 +13,7 @@
 }
 
 .card:hover {
-    background-color: #d8f3dc; /* Change background color on hover */
+    background-color: #ebf2fa; /* Change background color on hover */
     transform: scale(1.03); /* Scale the card to 105% of its original size */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow effect */
 }
@@ -24,8 +24,19 @@
     font-weight: 30px;
 }
 
-.card-body a {
-    font-weight: bold;
+.card-body {
+    transition: all 0.3s ease; /* Smooth transition for card body */
+  }
+
+.collapsible {
+    max-height: 0; /* Start with no height */
+    overflow: hidden; /* Hide overflow */
+    transition: max-height 0.3s ease; /* Transition for max-height */
+}
+
+.collapsible.open {
+    max-height: 200px; /* Set a max-height for expanded state */
+    /* Adjust the height as needed based on content */
 }
 
 
@@ -60,7 +71,7 @@
 
     !important;
     color: white !important;
-    margin: 5px;
+    margin-top: 5px;
     border-radius: 5px;
 }
 

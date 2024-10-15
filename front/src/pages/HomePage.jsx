@@ -12,14 +12,12 @@ function HomePage() {
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
   
-  // Check if user is authenticated (you may replace this with your actual authentication logic)
   const isAuthenticated = localStorage.getItem('user'); // Example check for authentication
 
   const toggleExpand = (id) => {
     setExpanded(expanded === id ? null : id);
   };
 
-  // Fetch ads from the API
   const fetchAds = async () => {
     try {
       const response = await fetch("http://localhost:5001/api/ads", {
@@ -42,16 +40,12 @@ function HomePage() {
     }
   };
 
-  // Call fetchAds when the component mounts or page changes
   useEffect(() => {
-    // Fetch ads if not authenticated (for example, always allow access to ads)
     fetchAds();
   }, [page]);
 
-  // Redirect if not authenticated and navigate to login if needed
   useEffect(() => {
     if (!isAuthenticated) {
-      // Optionally navigate to a login page or show an alert
       console.log("User is not authenticated");
       // navigate('/login'); // Uncomment if you want to redirect to login
     }
@@ -95,18 +89,20 @@ function HomePage() {
                   </a>
 
                   {/* Collapsible content for additional details */}
-                  {expanded === ad.id && (
-                    <div className="mt-3">
-                      <p>{ad.place}</p>
-                      <p>{ad.wages}</p>
-                      <p>{ad.workingSchedules}</p>
-                      <p>{ad.publicationDate}</p>
+                  <div className={`collapsible ${expanded === ad.id ? 'open' : ''}`}>
+                    {expanded === ad.id && (
+                      <div className="mt-3">
+                        <p>{ad.place}</p>
+                        <p>{ad.wages}</p>
+                        <p>{ad.workingSchedules}</p>
+                        <p>{ad.publicationDate}</p>
 
-                      {/* Pass ad data to ApplyNowButton */}
-                      <ApplyNowButton jobData={ad} />
-                      <button className='Save'>Save</button>
-                    </div>
-                  )}
+                        {/* Pass ad data to ApplyNowButton */}
+                        <ApplyNowButton jobData={ad} />
+                        <button className='Save'>Save</button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))
