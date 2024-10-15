@@ -64,26 +64,6 @@ def get_publishers():
     return jsonify({"publishers": publishers}), 200
 
 
-# Route pour récupérer les annonces (ads)
-@app.route("/api/ads", methods=["GET"])
-def get_ads():
-    cnx = mysql.connector.connect(
-        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
-        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
-        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
-        use_pure=False,
-    )
-    cursor = cnx.cursor(dictionary=True)
-    query = """
-        SELECT id, title, wages, description, contactInformations, contractType, place, workingSchedules, publicationDate, categories 
-        FROM ads
-    """
-    cursor.execute(query)
-    ads = cursor.fetchall()
-    return jsonify({"ads": ads}), 200
-
-
 # Route pour récupérer les applications
 @app.route("/api/apply", methods=["GET"])
 def get_applications():
@@ -1005,41 +985,6 @@ def create_publisher():
     )
     cnx.commit()
     return jsonify({"message": "Publisher created successfully!"}), 201
-
-
-# Route to create a new ad
-@app.route("/api/ads", methods=["POST"])
-def create_ad():
-    cnx = mysql.connector.connect(
-        user="root",
-        password="root_password",
-        host="db",
-        database="JustDoItDB",
-        use_pure=False,
-    )
-    data = request.json
-    cursor = cnx.cursor()
-
-    insert_query = """
-        INSERT INTO ads (title, wages, description, contactInformations, contractType, place, workingSchedules, publicationDate, categories)
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-    """
-    cursor.execute(
-        insert_query,
-        (
-            data.get("title"),
-            data.get("wages"),
-            data.get("description"),
-            data.get("contactInformations"),
-            data.get("contractType"),
-            data.get("place"),
-            data.get("workingSchedules"),
-            data.get("publicationDate"),
-            data.get("categories"),
-        ),
-    )
-    cnx.commit()
-    return jsonify({"message": "Ad created successfully!"}), 201
 
 
 # Route to create a new application
