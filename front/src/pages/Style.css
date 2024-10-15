@@ -1,10 +1,4 @@
-.card-body {
-    transition: all 3000s ease;
-  }
 
-.card:hover{
-    background-color:#f4f8fb;
-}
 .profilecard {
     transition: none; /* Disable transition effects */
 }
@@ -13,15 +7,27 @@
     box-shadow: none; /* Remove the shadow on hover */
     background-color: inherit; /* Prevent background color change on hover */
 }
-  
+
+.card {
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform, background color, and shadow */
+}
+
+.card:hover {
+    background-color: #d8f3dc; /* Change background color on hover */
+    transform: scale(1.03); /* Scale the card to 105% of its original size */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow effect */
+}
+
 .card-body p {
-font-size: 14px;
-color: #333;
+    font-size: 14px;
+    color: #333;
+    font-weight: 30px;
 }
 
 .card-body a {
-font-weight: bold;
+    font-weight: bold;
 }
+
 
 #filtersubmit{
     background-color: 	#477ba2
