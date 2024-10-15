@@ -13,17 +13,16 @@ function ProfilePage() {
         description: '',
         title: ''
     });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const navigate = useNavigate();
-    const [savedAds, setSavedAds] = useState([]);
+    const [loading, setLoading] = useState(true); // State to manage loading state
+    const [error, setError] = useState(null); // State to handle errors
+    const navigate = useNavigate(); // Define navigate using useNavigate hook
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
-            setLoading(false);
-            navigate('/login');
-            return;
+            setLoading(false); // Set loading to false
+            navigate('/login'); // Redirect to login page if token is not found
+            return; // Stop execution here to avoid calling the fetch function
         }
 
         const fetchUserData = async () => {
@@ -31,7 +30,7 @@ function ProfilePage() {
                 const response = await fetch("http://localhost:5001/api/user", {
                     method: 'GET',
                     headers: {
-                        'Authorization': `${token}`,
+                        'Authorization': `${token}`, // Include token for authorization
                     }
                 });
 
@@ -52,38 +51,19 @@ function ProfilePage() {
                 console.error(error);
                 setError("Could not fetch user data");
             } finally {
-                setLoading(false);
+                setLoading(false); // Stop loading
             }
         };
 
         fetchUserData();
-    }, [navigate]);
-
-    useEffect(() => {
-        const fetchSavedAds = async () => {
-            const savedAdsIds = JSON.parse(localStorage.getItem('savedAds')) || [];
-            if (savedAdsIds.length > 0) {
-                const response = await fetch("http://localhost:5001/api/ads/multiple", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ ids: savedAdsIds }),
-                });
-                const adsData = await response.json();
-                setSavedAds(adsData.ads);
-            }
-        };
-
-        fetchSavedAds();
-    }, []); // This useEffect will run only once when the component mounts
+    }, [navigate]); // Dependency array includes 'navigate'
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div>Loading...</div>; // Show loading message
     }
 
     if (error) {
-        return <div>{error}</div>;
+        return <div>{error}</div>; // Display error message if there is one
     }
 
     return (
@@ -114,19 +94,7 @@ function ProfilePage() {
                             <div className="card">
                                 <div className="card-header" style={{ backgroundColor: '#386fa4', color: 'white' }}>Saved Ads:</div>
                                 <div className="card-body">
-                                    {savedAds.length > 0 ? (
-                                        savedAds.map(ad => (
-                                            <div key={ad.id} className="card mb-3">
-                                                <div className="card-body">
-                                                    <h5 className="card-title">{ad.title}</h5>
-                                                    <p className="card-text">{ad.description}</p>
-                                                    {/* Add more ad details as needed */}
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p>No saved ads yet.</p>
-                                    )}
+                                    <p>No saved ads yet.</p>
                                 </div>
                             </div>
                         </div>
@@ -142,6 +110,7 @@ function ProfilePage() {
                                 </div>
                             </div>
                         </div>
+
                         <div className="col-12 mb-3">
                             <div className="card" style={{ height: '100%' }}>
                                 <div className="card-header" style={{ backgroundColor: '#386fa4', color: 'white' }}>Reminders</div>
