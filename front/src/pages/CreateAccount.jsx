@@ -59,7 +59,7 @@ function CreateAccount() {
     }
 
     try {
-      const response = await fetch("http://localhost:5001/api/signup", {
+      const response = await fetch("http://localhost:5001/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
