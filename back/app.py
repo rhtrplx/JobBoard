@@ -17,7 +17,7 @@ cnx = mysql.connector.connect(
 )
 
 app = Flask(__name__)
-CORS(app)  # Permettre toutes les origines par défaut
+CORS(app)
 
 
 # Génération d'un hash sécurisé pour le mot de passe
@@ -28,6 +28,219 @@ def hash_password(password):
 # Vérification d'un mot de passe avec le hash
 def check_password(password, hashed):
     return bcrypt.checkpw(password.encode("utf-8"), hashed)
+
+
+# Route pour récupérer les utilisateurs
+@app.route("/api/users", methods=["GET"])
+def get_users():
+    cursor = cnx.cursor(dictionary=True)
+    query = "SELECT id, name, lastName, email, city, country, zipcode, description, birthdate, title, contactInformations, username FROM users"
+    cursor.execute(query)
+    users = cursor.fetchall()
+    return jsonify({"users": users}), 200
+
+
+# Route pour récupérer les publicateurs (publishers)
+@app.route("/api/publishers", methods=["GET"])
+def get_publishers():
+    cursor = cnx.cursor(dictionary=True)
+    query = "SELECT id, name, title, place, contactInformations, lastLoginDate, signupDate FROM publishers"
+    cursor.execute(query)
+    publishers = cursor.fetchall()
+    return jsonify({"publishers": publishers}), 200
+
+
+# Route pour récupérer les annonces (ads)
+@app.route("/api/ads", methods=["GET"])
+def get_ads():
+    cursor = cnx.cursor(dictionary=True)
+    query = """
+        SELECT id, title, wages, description, contactInformations, contractType, place, workingSchedules, publicationDate, categories 
+        FROM ads
+    """
+    cursor.execute(query)
+    ads = cursor.fetchall()
+    return jsonify({"ads": ads}), 200
+
+
+# Route pour récupérer les applications
+@app.route("/api/apply", methods=["GET"])
+def get_applications():
+    cursor = cnx.cursor(dictionary=True)
+    query = """
+        SELECT id, adId, publisherId, userId, name, lastName, email, phoneNumber, city, country, zipcode, message, resume 
+        FROM applications
+    """
+    cursor.execute(query)
+    applications = cursor.fetchall()
+    return jsonify({"applications": applications}), 200
+
+
+# Route pour récupérer les administrateurs (adminUsers)
+@app.route("/api/admins", methods=["GET"])
+def get_admins():
+    cursor = cnx.cursor(dictionary=True)
+    query = "SELECT id, email, name, lastName FROM adminUsers"
+    cursor.execute(query)
+    admins = cursor.fetchall()
+    return jsonify({"admins": admins}), 200
+
+
+@app.route("/api/users/<int:id>", methods=["PUT"])
+def update_user(id):
+    data = request.json
+    cursor = cnx.cursor()
+
+    update_query = """
+        UPDATE users SET
+        name = %s, lastName = %s, email = %s, city = %s, country = %s, zipcode = %s,
+        description = %s, birthdate = %s, title = %s, contactInformations = %s, username = %s
+        WHERE id = %s
+    """
+    cursor.execute(
+        update_query,
+        (
+            data.get("name"),
+            data.get("lastName"),
+            data.get("email"),
+            data.get("city"),
+            data.get("country"),
+            data.get("zipcode"),
+            data.get("description"),
+            data.get("birthdate"),
+            data.get("title"),
+            data.get("contactInformations"),
+            data.get("username"),
+            id,
+        ),
+    )
+    cnx.commit()
+    return jsonify({"message": "User updated successfully!"}), 200
+
+
+@app.route("/api/users/<int:id>", methods=["DELETE"])
+def delete_user(id):
+    cursor = cnx.cursor()
+    delete_query = "DELETE FROM users WHERE id = %s"
+    cursor.execute(delete_query, (id,))
+    cnx.commit()
+    return jsonify({"message": "User deleted successfully!"}), 200
+
+
+@app.route("/api/ads/<int:id>", methods=["PUT"])
+def update_ad(id):
+    data = request.json
+    cursor = cnx.cursor()
+
+    update_query = """
+        UPDATE ads SET
+        title = %s, wages = %s, description = %s, contactInformations = %s, contractType = %s, 
+        place = %s, workingSchedules = %s, publicationDate = %s, categories = %s
+        WHERE id = %s
+    """
+    cursor.execute(
+        update_query,
+        (
+            data.get("title"),
+            data.get("wages"),
+            data.get("description"),
+            data.get("contactInformations"),
+            data.get("contractType"),
+            data.get("place"),
+            data.get("workingSchedules"),
+            data.get("publicationDate"),
+            data.get("categories"),
+            id,
+        ),
+    )
+    cnx.commit()
+    return jsonify({"message": "Ad updated successfully!"}), 200
+
+
+@app.route("/api/ads/<int:id>", methods=["DELETE"])
+def delete_ad(id):
+    cursor = cnx.cursor()
+    delete_query = "DELETE FROM ads WHERE id = %s"
+    cursor.execute(delete_query, (id,))
+    cnx.commit()
+    return jsonify({"message": "Ad deleted successfully!"}), 200
+
+
+@app.route("/api/apply/<int:id>", methods=["PUT"])
+def update_application(id):
+    data = request.json
+    cursor = cnx.cursor()
+
+    update_query = """
+        UPDATE applications SET
+        adId = %s, publisherId = %s, userId = %s, name = %s, lastName = %s, email = %s, 
+        phoneNumber = %s, city = %s, country = %s, zipcode = %s, message = %s, resume = %s
+        WHERE id = %s
+    """
+    cursor.execute(
+        update_query,
+        (
+            data.get("adId"),
+            data.get("publisherId"),
+            data.get("userId"),
+            data.get("name"),
+            data.get("lastName"),
+            data.get("email"),
+            data.get("phoneNumber"),
+            data.get("city"),
+            data.get("country"),
+            data.get("zipcode"),
+            data.get("message"),
+            data.get("resume"),
+            id,
+        ),
+    )
+    cnx.commit()
+    return jsonify({"message": "Application updated successfully!"}), 200
+
+
+@app.route("/api/apply/<int:id>", methods=["DELETE"])
+def delete_application(id):
+    cursor = cnx.cursor()
+    delete_query = "DELETE FROM applications WHERE id = %s"
+    cursor.execute(delete_query, (id,))
+    cnx.commit()
+    return jsonify({"message": "Application deleted successfully!"}), 200
+
+
+@app.route("/api/publishers/<int:id>", methods=["PUT"])
+def update_publisher(id):
+    data = request.json
+    cursor = cnx.cursor()
+
+    update_query = """
+        UPDATE publishers SET
+        name = %s, title = %s, place = %s, contactInformations = %s, lastLoginDate = %s, signupDate = %s
+        WHERE id = %s
+    """
+    cursor.execute(
+        update_query,
+        (
+            data.get("name"),
+            data.get("title"),
+            data.get("place"),
+            data.get("contactInformations"),
+            data.get("lastLoginDate"),
+            data.get("signupDate"),
+            id,
+        ),
+    )
+    cnx.commit()
+    return jsonify({"message": "Publisher updated successfully!"}), 200
+
+
+@app.route("/api/publishers/<int:id>", methods=["DELETE"])
+def delete_publisher(id):
+    cursor = cnx.cursor()
+    delete_query = "DELETE FROM publishers WHERE id = %s"
+    cursor.execute(delete_query, (id,))
+    cnx.commit()
+    return jsonify({"message": "Publisher deleted successfully!"}), 200
 
 
 @app.route("/api/login", methods=["POST"])
