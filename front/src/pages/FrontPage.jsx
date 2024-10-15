@@ -49,7 +49,9 @@ function FrontPage() {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('username', data.user.name);
         localStorage.setItem('email', data.user.email);
+        localStorage.setItem('isAdmin', data.user.isAdmin);
 
+        console.log(localStorage.getItem("isAdmin"))
         // Redirect to the specified path or default to /home
         navigate(redirectPath);
       } else {
@@ -65,7 +67,7 @@ function FrontPage() {
   return (
     <div>
       {/* Navbar with Logo */}
-      <NavigationHeader/>
+      <NavigationHeader />
 
       {/* Form */}
       <div className="d-flex justify-content-center align-items-top min-vh-100">

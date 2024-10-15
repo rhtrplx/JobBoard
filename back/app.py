@@ -73,11 +73,23 @@ def login_handler():
     if not check_password(password, hashed_password):
         return jsonify({"error": "Email or Password incorrect."}), 401
 
+    # Vérifier si l'utilisateur est un administrateur
+    admin_query = "SELECT * FROM adminUsers WHERE email = %s"
+    cursor.execute(admin_query, (email,))
+    admin_user = cursor.fetchone()
+
+    isAdmin = False
+    if admin_user:
+        isAdmin = (
+            True  # Si l'utilisateur est trouvé dans adminUsers, il est administrateur
+        )
+
     # Génération du token JWT
     payload_data = {
         "sub": user["id"],
         "name": user["name"],
         "nickname": user["username"],
+        "isAdmin": isAdmin,  # Ajouter cette information au token
     }
 
     my_secret = "rachidleplusbeau"
@@ -85,14 +97,14 @@ def login_handler():
 
     # Ajouter le token au dictionnaire de l'utilisateur
     user["token"] = token
+    user["isAdmin"] = isAdmin  # Ajouter l'indicateur isAdmin dans la réponse
 
     # Mettre à jour le token dans la base de données
     update_query = "UPDATE users SET token = %s WHERE id = %s"
-    print(update_query)
     cursor.execute(update_query, (token, user["id"]))
     cnx.commit()  # Confirmer l'insertion du token
 
-    # Retourner les informations de l'utilisateur avec le token mis à jour
+    # Retourner les informations de l'utilisateur avec le token mis à jour et isAdmin
     return jsonify({"message": "Success Login", "user": user}), 200
 
 
