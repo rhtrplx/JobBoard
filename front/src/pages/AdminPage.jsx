@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavigationHeader from '../components/Header';
 
@@ -11,8 +11,20 @@ function AdminPage() {
     const [editingItem, setEditingItem] = useState(null); // Holds the item being edited
     const [formData, setFormData] = useState({}); // Form data for editing
     const [showModal, setShowModal] = useState(false); // Modal visibility
+    const [isAuthorized, setIsAuthorized] = useState(false); // Authorization state
 
     const navigate = useNavigate();
+
+    // Check if the user is an admin
+    useEffect(() => {
+        const isAdmin = localStorage.getItem('isAdmin') === 'true'; // Ensure it's a boolean comparison
+        if (!isAdmin) {
+            // If not admin, redirect to login or show unauthorized message
+            navigate("/login"); // Redirect to login
+        } else {
+            setIsAuthorized(true); // Set authorized state to true if admin
+        }
+    }, [navigate]);
 
     const fetchData = async (endpoint) => {
         try {
@@ -158,6 +170,11 @@ function AdminPage() {
             </table>
         );
     };
+
+    // If not authorized, show nothing or a loading spinner (as the check is async)
+    if (!isAuthorized) {
+        return null; // You can also return a loading spinner or redirect
+    }
 
     return (
         <div>
