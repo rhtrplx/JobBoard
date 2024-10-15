@@ -9,10 +9,11 @@ function AdminPage() {
     const [ads, setAds] = useState([]);
     const [applications, setApplications] = useState([]);
     const [adminUsers, setAdminUsers] = useState([]); // New state for adminUsers
-    const [editingItem, setEditingItem] = useState(null); // Holds the item being edited
-    const [formData, setFormData] = useState({}); // Form data for editing
+    const [editingItem, setEditingItem] = useState(null); // Holds the item being edited or added
+    const [formData, setFormData] = useState({}); // Form data for editing or adding
     const [showModal, setShowModal] = useState(false); // Modal visibility
     const [isAuthorized, setIsAuthorized] = useState(false); // Authorization state
+    const [isEditMode, setIsEditMode] = useState(false); // To determine if it's edit or add mode
 
     const navigate = useNavigate();
 
@@ -20,7 +21,6 @@ function AdminPage() {
     useEffect(() => {
         const isAdmin = localStorage.getItem('isAdmin') === 'true'; // Ensure it's a boolean comparison
         if (!isAdmin) {
-            // If not admin, redirect to login or show unauthorized message
             navigate("/login"); // Redirect to login
         } else {
             setIsAuthorized(true); // Set authorized state to true if admin
@@ -32,7 +32,7 @@ function AdminPage() {
             const response = await fetch(`http://localhost:5001/api/${endpoint}`, {
                 method: "GET",
                 headers: {
-                    "Authorization": `${localStorage.getItem('token')}`,  // Use token from localStorage
+                    "Authorization": `${localStorage.getItem('token')}`,
                     "Content-Type": "application/json",
                 },
             });
@@ -74,54 +74,6 @@ function AdminPage() {
         fetchData(tab); // Fetch data for the selected tab
     };
 
-    // Open the modal for editing an item
-    const handleEditClick = (item) => {
-        // Convert date fields to YYYY-MM-DD format for pre-filling
-        const updatedItem = { ...item };
-
-        // Check for keys that contain 'date' and format them to YYYY-MM-DD
-        Object.keys(updatedItem).forEach(key => {
-            if (key.includes('date') && updatedItem[key]) {
-                updatedItem[key] = new Date(updatedItem[key]).toISOString().split('T')[0]; // Format the date
-            }
-        });
-
-        setEditingItem(updatedItem);
-        setFormData(updatedItem); // Pre-fill the form with current item data
-        setShowModal(true); // Show the modal
-    };
-
-    // Handle form input changes
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
-    // Submit the form to update the item
-    const handleUpdate = async () => {
-        const endpoint = activeTab;
-        try {
-            const response = await fetch(`http://localhost:5001/api/${endpoint}/${formData.id}`, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `${localStorage.getItem('token')}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to update item');
-            }
-
-            alert('Item updated successfully!');
-            setShowModal(false); // Close the modal
-            fetchData(endpoint); // Refresh the table
-        } catch (error) {
-            console.error('Failed to update item:', error);
-        }
-    };
-
     // Delete an item
     const handleDeleteClick = async (id) => {
         const endpoint = activeTab;
@@ -147,6 +99,129 @@ function AdminPage() {
         }
     };
 
+    // Open the modal for editing an item
+    const handleEditClick = (item) => {
+        setIsEditMode(true); // Set mode to edit
+        const updatedItem = { ...item };
+
+        // Format date fields to YYYY-MM-DD format
+        Object.keys(updatedItem).forEach(key => {
+            if (key.toLowerCase().includes('date') && updatedItem[key]) {
+                updatedItem[key] = new Date(updatedItem[key]).toISOString().split('T')[0];
+            }
+        });
+
+        setEditingItem(updatedItem);
+        setFormData(updatedItem); // Pre-fill the form with current item data
+        setShowModal(true); // Show the modal
+    };
+
+    // Open the modal for adding a new item
+    const handleAddClick = () => {
+        setIsEditMode(false); // Set mode to add
+        setFormData(getDefaultFormData()); // Set default form fields based on active tab
+        setShowModal(true); // Show the modal
+    };
+
+    // Get default form data structure based on the current active tab
+    const getDefaultFormData = () => {
+        switch (activeTab) {
+            case 'users':
+                return {
+                    name: '',
+                    lastName: '',
+                    email: '',
+                    city: '',
+                    country: '',
+                    zipcode: '',
+                    description: '',
+                    birthdate: '', // Date field
+                    title: '',
+                    contactInformations: '',
+                    username: '',
+                    password: '', // Add password field for user creation
+                };
+            case 'ads':
+                return {
+                    title: '',
+                    wages: '',
+                    description: '',
+                    contactInformations: '',
+                    contractType: '',
+                    place: '',
+                    workingSchedules: '',
+                    publicationDate: '', // Date field
+                    categories: '',
+                };
+            case 'publishers':
+                return {
+                    name: '',
+                    title: '',
+                    place: '',
+                    contactInformations: '',
+                    lastLoginDate: '', // Date field
+                    signupDate: '', // Date field
+                };
+            case 'apply':
+                return {
+                    adId: '',
+                    publisherId: '',
+                    userId: '',
+                    name: '',
+                    lastName: '',
+                    email: '',
+                    phoneNumber: '',
+                    city: '',
+                    country: '',
+                    zipcode: '',
+                    message: '',
+                    resume: '',
+                };
+            case 'admins':
+                return {
+                    email: '',
+                };
+            default:
+                return {};
+        }
+    };
+
+    // Handle form input changes
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    // Submit the form to update or add the item
+    const handleSave = async () => {
+        const endpoint = activeTab;
+        const method = isEditMode ? "PUT" : "POST"; // Determine method based on mode
+        const url = isEditMode
+            ? `http://localhost:5001/api/${endpoint}/${formData.id}` // For updating existing item
+            : `http://localhost:5001/api/${endpoint}`; // For creating a new item
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    "Authorization": `${localStorage.getItem('token')}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save item');
+            }
+
+            alert(`Item ${isEditMode ? 'updated' : 'created'} successfully!`);
+            setShowModal(false); // Close the modal
+            fetchData(endpoint); // Refresh the table
+        } catch (error) {
+            console.error('Failed to save item:', error);
+        }
+    };
+
     const renderTable = (data, headers, keyOrder) => {
         return (
             <table className="table">
@@ -165,7 +240,7 @@ function AdminPage() {
                                 <td key={idx}>{item[key]}</td>
                             ))}
                             <td>
-                                <button className="btn btn-primary" style={{margin:'5px'}} onClick={() => handleEditClick(item)}>Edit</button>
+                                <button className="btn btn-primary" style={{ margin: '5px' }} onClick={() => handleEditClick(item)}>Edit</button>
                                 <button className="btn btn-danger" onClick={() => handleDeleteClick(item.id)}>Delete</button>
                             </td>
                         </tr>
@@ -219,13 +294,19 @@ function AdminPage() {
                 </li>
                 <li className="nav-item">
                     <a
-                        className={`nav-link ${activeTab === 'admins' ? 'active' : ''}`}  // Updated for consistency
+                        className={`nav-link ${activeTab === 'admins' ? 'active' : ''}`}
                         onClick={() => handleTabClick('admins')}
                     >
                         Admin Users
                     </a>
                 </li>
             </ul>
+
+            <div className="d-flex justify-content-end mt-3">
+                <button className="btn btn-success" onClick={handleAddClick}>
+                    Add New Item
+                </button>
+            </div>
 
             <div className="tab-content mt-3">
                 {activeTab === 'users' && renderTable(
@@ -248,33 +329,41 @@ function AdminPage() {
                     ['ID', 'Name', 'Title', 'Place', 'Contact Information', 'Last Login Date', 'Signup Date'],
                     ['id', 'name', 'title', 'place', 'contactInformations', 'lastLoginDate', 'signupDate']
                 )}
-                {activeTab === 'admins' && renderTable(  // Updated to render Admin Users
+                {activeTab === 'admins' && renderTable(
                     adminUsers,
                     ['ID', 'Email'],
                     ['id', 'email']
                 )}
             </div>
 
-            {/* Modal for editing */}
+            {/* Modal for editing or adding */}
             {showModal && (
                 <div className="modal show" tabIndex="-1" role="dialog" style={{ display: 'block' }}>
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Edit Item</h5>
+                                <h5 className="modal-title">{isEditMode ? 'Edit Item' : 'Add New Item'}</h5>
                                 <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
                             </div>
                             <div className="modal-body">
-                                {/* Dynamic form based on activeTab */}
                                 {Object.keys(formData).map((key) => (
                                     <div key={key} className="form-group">
                                         <label>{key}</label>
-                                        {key.includes("date") ? (
+                                        {key.toLowerCase().includes("date") ? (
                                             <input
                                                 type="date"
                                                 name={key}
                                                 className="form-control"
-                                                value={formData[key] ? formData[key].split('T')[0] : ''} // Ensure the format is YYYY-MM-DD
+                                                value={formData[key] || ''} // Ensure the format is YYYY-MM-DD
+                                                onChange={handleInputChange}
+                                            />
+                                        ) : key === 'password' && !isEditMode ? (
+                                            // Only show password field when adding a new user
+                                            <input
+                                                type="password"
+                                                name={key}
+                                                className="form-control"
+                                                value={formData[key] || ''}
                                                 onChange={handleInputChange}
                                             />
                                         ) : (
@@ -290,7 +379,9 @@ function AdminPage() {
                                 ))}
                             </div>
                             <div className="modal-footer">
-                                <button type="button" className="btn btn-primary" onClick={handleUpdate}>Save changes</button>
+                                <button type="button" className="btn btn-primary" onClick={handleSave}>
+                                    {isEditMode ? 'Save changes' : 'Create Item'}
+                                </button>
                                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Close</button>
                             </div>
                         </div>
