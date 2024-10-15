@@ -27,7 +27,7 @@ function ModifyAccount() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await fetch("http://localhost:5001/api/users", {
+        const response = await fetch("http://localhost:5001/api/user", {
           method: "GET",
           headers: {
             "Authorization": `${localStorage.getItem('token')}`,

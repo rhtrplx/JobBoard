@@ -34,7 +34,7 @@ function ApplicationForm() {
 
     const fetchUserData = async () => {
       try {
-        const response = await fetch('http://localhost:5001/api/users', {
+        const response = await fetch('http://localhost:5001/api/user', {
           method: 'GET',
           headers: {
             'Authorization': `${token}`,
@@ -196,14 +196,14 @@ function ApplicationForm() {
       </div>
 
       {/* Modal */}
-      <div className={`modal fade ${showModal ? 'show' : ''}`} id="successModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden={!showModal} style={{ display: showModal ? 'block' : 'none'}}>
+      <div className={`modal fade ${showModal ? 'show' : ''}`} id="successModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden={!showModal} style={{ display: showModal ? 'block' : 'none' }}>
         <div className="modal-dialog">
           <div className="modal-content">
-            <div className="modal-header" style={{backgroundColor:'#97cf8a'}}>
+            <div className="modal-header" style={{ backgroundColor: '#97cf8a' }}>
               <h1 className="modal-title fs-5" id="exampleModalLabel">Application Successful!</h1>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div className="modal-body" style={{backgroundColor:'#acd1af', fontWeight:'25px'}}>
+            <div className="modal-body" style={{ backgroundColor: '#acd1af', fontWeight: '25px' }}>
               Redirecting to home page.
             </div>
           </div>

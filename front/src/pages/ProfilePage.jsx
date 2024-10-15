@@ -27,7 +27,7 @@ function ProfilePage() {
 
         const fetchUserData = async () => {
             try {
-                const response = await fetch("http://localhost:5001/api/users", {
+                const response = await fetch("http://localhost:5001/api/user", {
                     method: 'GET',
                     headers: {
                         'Authorization': `${token}`, // Include token for authorization
@@ -39,6 +39,7 @@ function ProfilePage() {
                 }
 
                 const data = await response.json();
+                console.log(data)
                 setUserData({
                     name: data.user.name || '',
                     lastname: data.user.lastname || '',
