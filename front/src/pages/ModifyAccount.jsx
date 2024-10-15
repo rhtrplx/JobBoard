@@ -196,7 +196,7 @@ function ModifyAccount() {
             {errorMessage && <div className="alert alert-danger text-center">{errorMessage}</div>}
 
             <div className="col-12 d-flex justify-content-center mt-3">
-              <button type="submit" className="btn btn-primary" style={{ marginBottom: '20px' }}>Save Changes</button>
+              <button type="submit" className="btn" style={{ backgroundColor: '#386fa4', color: 'white', marginBottom:'30px'}}>Save Changes</button>
             </div>
           </form>
         )}

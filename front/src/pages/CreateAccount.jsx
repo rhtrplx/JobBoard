@@ -147,7 +147,7 @@ function CreateAccount() {
           </div>
 
           <div className="col-12 d-flex justify-content-center mt-3">
-            <button type="submit" className="btn btn-primary">Create an Account</button>
+            <button type="submit" className="btn" style={{ backgroundColor: '#386fa4', color: 'white', marginBottom:'30px' }}>Create an Account</button>
           </div>
         </form>
       </div>

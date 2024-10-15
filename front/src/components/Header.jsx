@@ -168,7 +168,7 @@ const NavigationHeader = ({ loggedInUser }) => {
       </nav>
 
       {showAlert && (
-        <div className="alert alert-info" role="alert" style={{ position: 'fixed', top: '10px', right: '20%', width: '20%', textAlign: 'center', alignContent: 'center' }}>
+        <div className="alert alert-danger" role="alert" style={{ position: 'fixed', top: '10px', right: '20%', width: '20%', textAlign: 'center', alignContent: 'center' }}>
           {alertMessage}
         </div>
       )}
