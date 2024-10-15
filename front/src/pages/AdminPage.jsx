@@ -8,6 +8,7 @@ function AdminPage() {
     const [publishers, setPublishers] = useState([]);
     const [ads, setAds] = useState([]);
     const [applications, setApplications] = useState([]);
+    const [adminUsers, setAdminUsers] = useState([]); // New state for adminUsers
     const [editingItem, setEditingItem] = useState(null); // Holds the item being edited
     const [formData, setFormData] = useState({}); // Form data for editing
     const [showModal, setShowModal] = useState(false); // Modal visibility
@@ -56,6 +57,9 @@ function AdminPage() {
                     break;
                 case 'apply':
                     setApplications(result.applications);
+                    break;
+                case 'admins':
+                    setAdminUsers(result.admins);
                     break;
                 default:
                     break;
@@ -213,6 +217,14 @@ function AdminPage() {
                         Publishers
                     </a>
                 </li>
+                <li className="nav-item">
+                    <a
+                        className={`nav-link ${activeTab === 'admins' ? 'active' : ''}`}  // Updated for consistency
+                        onClick={() => handleTabClick('admins')}
+                    >
+                        Admin Users
+                    </a>
+                </li>
             </ul>
 
             <div className="tab-content mt-3">
@@ -235,6 +247,11 @@ function AdminPage() {
                     publishers,
                     ['ID', 'Name', 'Title', 'Place', 'Contact Information', 'Last Login Date', 'Signup Date'],
                     ['id', 'name', 'title', 'place', 'contactInformations', 'lastLoginDate', 'signupDate']
+                )}
+                {activeTab === 'admins' && renderTable(  // Updated to render Admin Users
+                    adminUsers,
+                    ['ID', 'Email'],
+                    ['id', 'email']
                 )}
             </div>
 
