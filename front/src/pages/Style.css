@@ -64,16 +64,33 @@
 
 
 .learnmorebtn{
-    background-color: #1178be
-
-    !important;
-    border-color: #1178be
-
-    !important;
-    color: white !important;
-    margin-top: 5px;
-    border-radius: 5px;
+    background-image: linear-gradient(to right, #0575E6 0%, #021B79  51%, #1178be
+    100%);
+    margin: 10px;
+    padding: 15px 45px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 1s !important;
+    background-size: 200% auto;
+    color: white !important;            
+    box-shadow: 0 0 20px #eee;
+    border-radius: 10px;
+    display: block;
 }
+
+.learnmorebtn:hover {
+    background-position: right center; /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+}
+     
+
+.learnmorebtn:hover {
+background-position: right center; /* change the direction of the change here */
+color: #fff;
+text-decoration: none;
+}
+     
 
 #CreateAccount{
     background-color: #1178be
@@ -91,8 +108,25 @@
     margin: 5px;
     border-radius: 5px;
     color: black;
+    transition: transform 0.3s ease;
+}
+.Save:hover {
+    transform: translateY(-5px); /* Raise button on hover */
 }
 
+.ApplyNow {
+    background-color: 	#cee6fa;
+    border-color: #6babe0;
+    margin: 5px;
+    border-radius: 5px;
+    color: black;
+    transition: transform 0.3s ease; /* Smooth transition */
+  }
+  
+.ApplyNow:hover {
+transform: translateY(-5px); /* Raise button on hover */
+}
+  
 
 
 .HeaderContainer {
@@ -122,7 +156,34 @@
 
 }
 
+/* Style.css */
+.custom-input {
+    width: 90% !important; /* Set input width to 15 pixels */
+    margin: 8px 0px !important;
+}
 
+         
+  
+.custom-button {
+    background-image: linear-gradient(to right, #6190E8 0%, #A7BFE8  51%, #6190E8  100%);
+    margin: 10px;
+    padding: 15px 45px;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 1s !important;
+    background-size: 200% auto;
+    color: white;            
+    box-shadow: 0 0 20px #eee;
+    border-radius: 10px;
+    display: block;
+  }
+
+.custom-button:hover {
+background-position: right center; /* change the direction of the change here */
+color: #fff;
+text-decoration: none;
+}
+ 
 
 /* CREATEACCOUNT PAGE */
 

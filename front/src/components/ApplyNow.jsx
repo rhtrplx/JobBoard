@@ -17,17 +17,10 @@ const ApplyNowButton = ({ jobData }) => {
 
   return (
     <button
-      className="ApplyNow"
-      style={{
-        backgroundColor: '#cee6fa',
-        borderColor: '#6babe0',
-        color: 'black',
-        margin: '5px',
-        borderRadius: '5px',
-      }}
-      onClick={handleApplyNowClick}
-    >
-      Apply Now!
+        className="ApplyNow"
+        onClick={handleApplyNowClick}
+      >
+        Apply Now
     </button>
   );
 };
