@@ -165,7 +165,7 @@ function AdminPage() {
                                 <td key={idx}>{item[key]}</td>
                             ))}
                             <td>
-                                <button className="btn btn-primary" onClick={() => handleEditClick(item)}>Edit</button>
+                                <button className="btn btn-primary" style={{margin:'5px'}} onClick={() => handleEditClick(item)}>Edit</button>
                                 <button className="btn btn-danger" onClick={() => handleDeleteClick(item.id)}>Delete</button>
                             </td>
                         </tr>
