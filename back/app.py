@@ -231,6 +231,22 @@ def delete_ad(id):
     return jsonify({"message": "Ad deleted successfully!"}), 200
 
 
+@app.route("/api/admins/<int:id>", methods=["DELETE"])
+def delete_admin(id):
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
+    cursor = cnx.cursor()
+    delete_query = "DELETE FROM adminUsers WHERE id = %s"
+    cursor.execute(delete_query, (id,))
+    cnx.commit()
+    return jsonify({"message": "Admin deleted successfully!"}), 200
+
+
 @app.route("/api/apply/<int:id>", methods=["PUT"])
 def update_application(id):
     cnx = mysql.connector.connect(
