@@ -9,10 +9,10 @@ import bcrypt  # Importation de bcrypt pour le hachage des mots de passe
 time.sleep(5)
 
 cnx = mysql.connector.connect(
-    user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
-    password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-    host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
-    database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+    user="root",
+    password="root_password",
+    host="db",
+    database="JustDoItDB",
     use_pure=False,
 )
 
@@ -33,6 +33,13 @@ def check_password(password, hashed):
 # Route pour récupérer les utilisateurs
 @app.route("/api/users", methods=["GET"])
 def get_users():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     cursor = cnx.cursor(dictionary=True)
     query = "SELECT id, name, lastName, email, city, country, zipcode, description, birthdate, title, contactInformations, username FROM users"
     cursor.execute(query)
@@ -43,6 +50,13 @@ def get_users():
 # Route pour récupérer les publicateurs (publishers)
 @app.route("/api/publishers", methods=["GET"])
 def get_publishers():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     cursor = cnx.cursor(dictionary=True)
     query = "SELECT id, name, title, place, contactInformations, lastLoginDate, signupDate FROM publishers"
     cursor.execute(query)
@@ -53,6 +67,13 @@ def get_publishers():
 # Route pour récupérer les annonces (ads)
 @app.route("/api/ads", methods=["GET"])
 def get_ads():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     cursor = cnx.cursor(dictionary=True)
     query = """
         SELECT id, title, wages, description, contactInformations, contractType, place, workingSchedules, publicationDate, categories 
@@ -66,6 +87,13 @@ def get_ads():
 # Route pour récupérer les applications
 @app.route("/api/apply", methods=["GET"])
 def get_applications():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     cursor = cnx.cursor(dictionary=True)
     query = """
         SELECT id, adId, publisherId, userId, name, lastName, email, phoneNumber, city, country, zipcode, message, resume 
@@ -79,6 +107,13 @@ def get_applications():
 # Route pour récupérer les administrateurs (adminUsers)
 @app.route("/api/admins", methods=["GET"])
 def get_admins():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     cursor = cnx.cursor(dictionary=True)
     query = "SELECT id, email, name, lastName FROM adminUsers"
     cursor.execute(query)
@@ -88,6 +123,13 @@ def get_admins():
 
 @app.route("/api/users/<int:id>", methods=["PUT"])
 def update_user(id):
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     data = request.json
     cursor = cnx.cursor()
 
@@ -120,6 +162,13 @@ def update_user(id):
 
 @app.route("/api/users/<int:id>", methods=["DELETE"])
 def delete_user(id):
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     cursor = cnx.cursor()
     delete_query = "DELETE FROM users WHERE id = %s"
     cursor.execute(delete_query, (id,))
@@ -129,6 +178,13 @@ def delete_user(id):
 
 @app.route("/api/ads/<int:id>", methods=["PUT"])
 def update_ad(id):
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     data = request.json
     cursor = cnx.cursor()
 
@@ -159,6 +215,13 @@ def update_ad(id):
 
 @app.route("/api/ads/<int:id>", methods=["DELETE"])
 def delete_ad(id):
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     cursor = cnx.cursor()
     delete_query = "DELETE FROM ads WHERE id = %s"
     cursor.execute(delete_query, (id,))
@@ -168,6 +231,13 @@ def delete_ad(id):
 
 @app.route("/api/apply/<int:id>", methods=["PUT"])
 def update_application(id):
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     data = request.json
     cursor = cnx.cursor()
 
@@ -201,6 +271,13 @@ def update_application(id):
 
 @app.route("/api/apply/<int:id>", methods=["DELETE"])
 def delete_application(id):
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     cursor = cnx.cursor()
     delete_query = "DELETE FROM applications WHERE id = %s"
     cursor.execute(delete_query, (id,))
@@ -210,6 +287,13 @@ def delete_application(id):
 
 @app.route("/api/publishers/<int:id>", methods=["PUT"])
 def update_publisher(id):
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     data = request.json
     cursor = cnx.cursor()
 
@@ -236,6 +320,13 @@ def update_publisher(id):
 
 @app.route("/api/publishers/<int:id>", methods=["DELETE"])
 def delete_publisher(id):
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
     cursor = cnx.cursor()
     delete_query = "DELETE FROM publishers WHERE id = %s"
     cursor.execute(delete_query, (id,))
@@ -248,7 +339,7 @@ def login_handler():
     cnx = mysql.connector.connect(
         user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
         password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
         database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
         use_pure=False,
     )
@@ -326,7 +417,7 @@ def signup_handler():
     cnx = mysql.connector.connect(
         user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
         password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
         database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
         use_pure=False,
     )
@@ -448,7 +539,7 @@ def update_account_handler():
     cnx = mysql.connector.connect(
         user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
         password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
         database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
         use_pure=False,
     )
@@ -563,7 +654,7 @@ def ads_handler():
     cnx = mysql.connector.connect(
         user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
         password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
         database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
         use_pure=False,
     )
@@ -603,7 +694,7 @@ def apply_handler():
     cnx = mysql.connector.connect(
         user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
         password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
         database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
         use_pure=False,
     )
@@ -676,56 +767,32 @@ def apply_handler():
 # TODO functions to use filers
 
 
-@app.route("/api/users", methods=["GET"])
-def users_handler():
-    # Connexion à la base de données
+# Route pour récupérer les informations d'un utilisateur via le token Authorization
+@app.route("/api/user", methods=["GET"])
+def get_user_by_token():
     cnx = mysql.connector.connect(
         user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
         password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
-        host="db",  # Utilisez '127.0.0.1' ou 'localhost' pour se connecter depuis le host
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
         database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
         use_pure=False,
     )
-
-    # Suppression de request.get_json() car GET ne devrait pas recevoir de corps
-    # data = request.get_json()  # Supprimé
-    # print(f"Request Data: {data}")  # Supprimé
-
     # Récupérer le token d'authentification dans les headers
     token = request.headers.get("Authorization")
     print(f"Authorization Token: {token}")
 
-    # Vérifier si le token est présent
     if not token:
-        print("Aucun token fourni dans les en-têtes.")
         return jsonify({"error": "Authorization token required"}), 401
 
-    # Requête SQL pour vérifier les informations d'identification
-    query = "SELECT * FROM users WHERE token = %s"
     cursor = cnx.cursor(dictionary=True)
+    query = "SELECT * FROM users WHERE token = %s"
+    cursor.execute(query, (token,))
+    user = cursor.fetchone()
 
-    try:
-        print(f"Executing query: {query} with token: {token}")
-        cursor.execute(query, (token,))
-        user = cursor.fetchone()
-        print(f"Query Result: {user}")
-
-        # Si l'utilisateur existe, retourner un message de succès
-        if user:
-            print("Utilisateur trouvé, retour des informations utilisateur.")
-            return jsonify({"user": user}), 200
-        else:
-            print("Token non valide, utilisateur introuvable.")
-            return jsonify({"error": "Token incorrect."}), 401
-    except mysql.connector.Error as err:
-        print(f"Database error: {err}")
-        return (
-            jsonify({"error": "An error occurred while accessing the database."}),
-            500,
-        )
-    finally:
-        cursor.close()
-        cnx.close()
+    if user:
+        return jsonify({"user": user}), 200
+    else:
+        return jsonify({"error": "User not found."}), 404
 
 
 @app.route("/api/healthcheck", methods=["GET"])
