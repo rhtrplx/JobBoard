@@ -22,6 +22,7 @@ function CreateAccount() {
   });
   const [alertMessage, setAlertMessage] = useState('');
   const [showAlert, setShowAlert] = useState(false);
+  const [showModal, setShowModal] = useState(false); // State for modal visibility
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -65,10 +66,12 @@ function CreateAccount() {
       // Save the user's name directly from formData to local storage
       localStorage.setItem('name', formData.name);
 
-      setAlertMessage('Account successfully created!');
-      setShowAlert(true);
+      // Show the modal
+      setShowModal(true);
 
+      // Close modal after 2 seconds and navigate
       setTimeout(() => {
+        setShowModal(false);
         navigate("/"); // Navigate to home or desired route
       }, 2000);
     } catch (error) {
@@ -147,9 +150,21 @@ function CreateAccount() {
           </div>
 
           <div className="col-12 d-flex justify-content-center mt-3">
-            <button type="submit" className="btn btn-primary">Create an Account</button>
+            <button type="submit" className="btn" style={{ backgroundColor: '#386fa4', color: 'white', marginBottom: '30px' }}>Create an Account</button>
           </div>
         </form>
+      </div>
+
+      {/* Modal */}
+      <div className={`modal fade ${showModal ? 'show' : ''}`} id="successModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden={!showModal} style={{ display: showModal ? 'block' : 'none' }}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header" style={{ backgroundColor: '#97cf8a' }}>
+              <h1 className="modal-title fs-5" id="exampleModalLabel">Account Created Successfully!</h1>
+              <button type="button" className="btn-close" onClick={() => setShowModal(false)} aria-label="Close"></button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
