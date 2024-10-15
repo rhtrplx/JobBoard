@@ -1,31 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../assets/Logo.png';
 
-const NavigationHeader = ({ loggedInUser }) => { // Accept loggedInUser as a prop
+const NavigationHeader = ({ loggedInUser }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
-  const token = localStorage.getItem('token'); // Check if the user is logged in
+  const token = localStorage.getItem('token');
   const [username, setUsername] = useState(loggedInUser || localStorage.getItem('name'));
 
+  // Get isAdmin from localStorage
+  const isAdmin = localStorage.getItem('isAdmin') === 'true'; // Convert the string 'true' to boolean
 
   useEffect(() => {
-    // Update username state if loggedInUser prop changes
     setUsername(loggedInUser);
   }, [loggedInUser]);
 
   const handleLogout = () => {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('token');
-    localStorage.removeItem('username'); // Remove the username on logout
-    setAlertMessage('Logged out'); // Set alert message when logged out
-    setShowAlert(true); // Show the alert
+    localStorage.removeItem('username');
+    localStorage.removeItem('isAdmin'); // Remove isAdmin on logout
+    setAlertMessage('Logged out');
+    setShowAlert(true);
     setTimeout(() => {
-      setShowAlert(false); // Hide the alert after 2 seconds
-      navigate("/"); // Redirect after showing alert
+      setShowAlert(false);
+      navigate('/');
     }, 1000);
   };
 
@@ -33,15 +36,9 @@ const NavigationHeader = ({ loggedInUser }) => { // Accept loggedInUser as a pro
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleProfileClick = () => {
-    if (!token) {
-      // No token, redirect to login without showing an alert
-      navigate('/login');
-    } else {
-      // Token exists, navigate to the profile page
-      navigate('/profile');
-    }
-  };
+  // Determine if on login page and home page
+  const isLoginPage = location.pathname === '/login';
+  const isHomePage = location.pathname === '/';
 
   return (
     <>
@@ -52,43 +49,45 @@ const NavigationHeader = ({ loggedInUser }) => { // Accept loggedInUser as a pro
               src={logo}
               alt="Logo"
               className="logo"
-              style={{
-                width: '100px',
-                transition: 'transform 0.3s ease',
-              }}
+              style={{ width: '100px', transition: 'transform 0.3s ease' }}
               onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
               onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
             />
           </div>
 
+          {/* Conditionally render buttons */}
           <ul className="nav nav-pills" style={{ gap: '20px', margin: '0' }}>
-            <li className="nav-item">
-              <button
-                className="nav-link active"
-                onClick={() => navigate('/')}
-                style={{
-                  backgroundColor: 'transparent',
-                  color: '#1178be',
-                  fontWeight: '600',
-                  border: '2px solid #1178be',
-                  borderRadius: '20px',
-                  padding: '10px 20px',
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = '#1178be';
-                  e.currentTarget.style.color = '#fff';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.color = '#1178be';
-                }}
-              >
-                Home
-              </button>
-            </li>
+            {/* Home button - hidden on home page */}
+            {!isHomePage && (
+              <li className="nav-item">
+                <button
+                  className="nav-link active"
+                  onClick={() => navigate('/')}
+                  style={{
+                    backgroundColor: 'transparent',
+                    color: '#1178be',
+                    fontWeight: '600',
+                    border: '2px solid #1178be',
+                    borderRadius: '20px',
+                    padding: '10px 20px',
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#1178be';
+                    e.currentTarget.style.color = '#fff';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#1178be';
+                  }}
+                >
+                  Home
+                </button>
+              </li>
+            )}
 
-            {token ? (
+            {/* Conditionally render Profile and Manage buttons if NOT on login page and token exists */}
+            {!isLoginPage && token && (
               <li className="nav-item dropdown" style={{ position: 'relative' }}>
                 <button
                   className="nav-link dropdown-toggle"
@@ -112,7 +111,7 @@ const NavigationHeader = ({ loggedInUser }) => { // Accept loggedInUser as a pro
                 {isDropdownOpen && (
                   <ul className="dropdown-menu show" aria-labelledby="profileDropdown" style={dropdownStyles}>
                     <li>
-                      <button className="dropdown-item" onClick={handleProfileClick} style={dropdownItemStyles}>
+                      <button className="dropdown-item" onClick={() => navigate('/profile')} style={dropdownItemStyles}>
                         View
                       </button>
                     </li>
@@ -121,11 +120,14 @@ const NavigationHeader = ({ loggedInUser }) => { // Accept loggedInUser as a pro
                         Modify
                       </button>
                     </li>
-                    <li>
-                      <button className="dropdown-item" onClick={() => navigate('/settings')} style={dropdownItemStyles}>
-                        Settings
-                      </button>
-                    </li>
+                    {/* Conditionally render Manage button if user is admin */}
+                    {isAdmin && (
+                      <li>
+                        <button className="dropdown-item" onClick={() => navigate('/admin')} style={dropdownItemStyles}>
+                          Manage
+                        </button>
+                      </li>
+                    )}
                     <li>
                       <hr className="dropdown-divider" />
                     </li>
@@ -137,7 +139,10 @@ const NavigationHeader = ({ loggedInUser }) => { // Accept loggedInUser as a pro
                   </ul>
                 )}
               </li>
-            ) : (
+            )}
+
+            {/* Render Log In button if not logged in */}
+            {!isLoginPage && !token && (
               <li className="nav-item">
                 <button
                   className="nav-link"
