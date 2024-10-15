@@ -4,21 +4,20 @@ import './Style.css';
 import { useNavigate } from 'react-router-dom';
 import NavigationHeader from '../components/Header';
 import ApplyNowButton from '../components/ApplyNow';
-import LogoutButton from '../components/Logout';
 
 function HomePage() {
   const [expanded, setExpanded] = useState(null);
   const [ads, setAds] = useState([]);
   const [page, setPage] = useState(0);
-  const [adDetails, setAdDetails] = useState({}); // To hold additional details for the selected ad
+  const [adDetails, setAdDetails] = useState(null); // To hold additional details for the selected ad
   const navigate = useNavigate();
-  
+
   const isAuthenticated = localStorage.getItem('user'); // Example check for authentication
 
   const toggleExpand = async (id) => {
     if (expanded === id) {
       setExpanded(null);
-      setAdDetails({}); // Clear details if collapsing
+      setAdDetails(null); // Clear details if collapsing
     } else {
       setExpanded(id);
       await fetchAdDetails(id); // Fetch details when expanding
@@ -49,13 +48,19 @@ function HomePage() {
 
   const fetchAdDetails = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/ads/${id}`); // Assuming this endpoint fetches details for a specific ad
+      const response = await fetch(`http://localhost:5001/api/ads/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
       }
 
       const data = await response.json();
+      console.log(data);
       setAdDetails(data); // Update state with the fetched details
     } catch (error) {
       console.error("Failed to fetch ad details:", error);
@@ -113,12 +118,12 @@ function HomePage() {
 
                   {/* Collapsible content for additional details */}
                   <div className={`collapsible ${expanded === ad.id ? 'open' : ''}`}>
-                    {expanded === ad.id && adDetails.id === ad.id && ( // Ensure details correspond to the expanded ad
+                    {expanded === ad.id && adDetails && adDetails.id === ad.id && ( // Ensure details correspond to the expanded ad
                       <div className="mt-3">
-                        <p>{adDetails.place}</p>
-                        <p>{adDetails.wages}</p>
-                        <p>{adDetails.workingSchedules}</p>
-                        <p>{adDetails.publicationDate}</p>
+                        <p><strong>Location:</strong> {adDetails.place}</p>
+                        <p><strong>Wages:</strong> {adDetails.wages}</p>
+                        <p><strong>Working Schedules:</strong> {adDetails.workingSchedules}</p>
+                        <p><strong>Publication Date:</strong> {new Date(adDetails.publicationDate).toLocaleDateString()}</p>
 
                         {/* Pass ad data to ApplyNowButton */}
                         <ApplyNowButton jobData={adDetails} />

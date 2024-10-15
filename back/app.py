@@ -213,6 +213,28 @@ def update_ad(id):
     return jsonify({"message": "Ad updated successfully!"}), 200
 
 
+@app.route("/api/ads/<int:id>", methods=["GET"])
+def get_ad(id):
+    cnx = mysql.connector.connect(
+        user="root",  # MySQL username
+        password="root_password",  # MySQL password
+        host="db",  # Use 'db' or 'localhost' to connect from the host
+        database="JustDoItDB",  # Database name specified in docker-compose.yml
+        use_pure=False,
+    )
+    cursor = cnx.cursor(dictionary=True)
+
+    # SQL query to fetch ad details by id
+    query = "SELECT * FROM ads WHERE id = %s"
+    cursor.execute(query, (id,))
+
+    ad = cursor.fetchone()  # Fetch one ad
+    if ad:
+        return jsonify(ad), 200  # Return the ad details as JSON if found
+    else:
+        return jsonify({"error": "Ad not found"}), 404  # Return an error if not found
+
+
 @app.route("/api/ads/<int:id>", methods=["DELETE"])
 def delete_ad(id):
     cnx = mysql.connector.connect(
