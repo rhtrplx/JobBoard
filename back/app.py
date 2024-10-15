@@ -115,7 +115,7 @@ def get_admins():
         use_pure=False,
     )
     cursor = cnx.cursor(dictionary=True)
-    query = "SELECT id, email, name, lastName FROM adminUsers"
+    query = "SELECT * FROM adminUsers"
     cursor.execute(query)
     admins = cursor.fetchall()
     return jsonify({"admins": admins}), 200
@@ -671,44 +671,79 @@ def update_account_handler():
         cursor.close()
 
 
-@app.route("/api/ads", methods=["POST"])
+# Route to handle both fetching ads (GET) and creating a new ad (POST)
+@app.route("/api/ads", methods=["GET", "POST"])
 def ads_handler():
     cnx = mysql.connector.connect(
-        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
-        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        user="root",  # MySQL username specified in docker-compose.yml
+        password="root_password",  # MySQL password specified in docker-compose.yml
         host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
-        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        database="JustDoItDB",  # Database name specified in docker-compose.yml
         use_pure=False,
     )
-    # Récupérer les données envoyées depuis React
-    data = request.json
-    page = data["page"]  # Défaut à 0 si "page" n'est pas fourni
-    try:
-        page = int(page)
-    except:
-        return jsonify({"error": "Page is not an int."}), 409
-
-    if page < 0:
-        return jsonify({"error": "Page negative."}), 409
-
-    # Définir le nombre d'annonces par page
-    ads_per_page = 50
-    offset = page * ads_per_page
-
-    # Requête pour récupérer les annonces en fonction de la page
-    select_query = "SELECT * FROM ads ORDER BY id DESC LIMIT %s OFFSET %s"
     cursor = cnx.cursor(dictionary=True)
 
-    try:
-        cursor.execute(select_query, (ads_per_page, offset))
-        ads = cursor.fetchall()  # Récupérer toutes les annonces
+    # Handle GET request: Fetch ads with pagination
+    if request.method == "GET":
+        # Get 'page' parameter from the query string (defaults to 0 if not provided)
+        page = request.args.get("page", 0)
+        try:
+            page = int(page)
+        except:
+            return jsonify({"error": "Page is not an int."}), 409
 
-        return jsonify({"ads": ads}), 200  # Retourner les annonces en format JSON
-    except mysql.connector.Error as err:
-        print(f"An error occurred while accessing the DB: {err}")
-        return jsonify({"error": "An error occurred while fetching ads."}), 500
-    finally:
-        cursor.close()
+        if page < 0:
+            return jsonify({"error": "Page negative."}), 409
+
+        # Define the number of ads per page
+        ads_per_page = 50
+        offset = page * ads_per_page
+
+        # Query to fetch ads with pagination
+        select_query = "SELECT * FROM ads ORDER BY id DESC LIMIT %s OFFSET %s"
+
+        try:
+            cursor.execute(select_query, (ads_per_page, offset))
+            ads = cursor.fetchall()  # Fetch all ads
+            return jsonify({"ads": ads}), 200  # Return ads in JSON format
+        except mysql.connector.Error as err:
+            print(f"An error occurred while accessing the DB: {err}")
+            return jsonify({"error": "An error occurred while fetching ads."}), 500
+        finally:
+            cursor.close()
+
+    # Handle POST request: Create a new ad
+    elif request.method == "POST":
+        # Retrieve data sent from React
+        data = request.json
+
+        # Query to insert a new ad
+        insert_query = """
+            INSERT INTO ads (title, wages, description, contactInformations, contractType, place, workingSchedules, publicationDate, categories)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """
+        try:
+            cursor.execute(
+                insert_query,
+                (
+                    data.get("title"),
+                    data.get("wages"),
+                    data.get("description"),
+                    data.get("contactInformations"),
+                    data.get("contractType"),
+                    data.get("place"),
+                    data.get("workingSchedules"),
+                    data.get("publicationDate"),
+                    data.get("categories"),
+                ),
+            )
+            cnx.commit()
+            return jsonify({"message": "Ad created successfully!"}), 201
+        except mysql.connector.Error as err:
+            print(f"An error occurred while creating the ad: {err}")
+            return jsonify({"error": "An error occurred while creating the ad."}), 500
+        finally:
+            cursor.close()
 
 
 @app.route("/api/apply", methods=["POST"])
@@ -815,6 +850,256 @@ def get_user_by_token():
         return jsonify({"user": user}), 200
     else:
         return jsonify({"error": "User not found."}), 404
+
+
+# Route to create a new user with password hashing
+@app.route("/api/users", methods=["POST"])
+def create_user():
+    cnx = mysql.connector.connect(
+        user="root",  # Nom d'utilisateur MySQL spécifié dans docker-compose.yml
+        password="root_password",  # Mot de passe MySQL spécifié dans docker-compose.yml
+        host="db",  # Utilisez 'db' ou 'localhost' pour se connecter depuis le host
+        database="JustDoItDB",  # Nom de la base de données spécifiée dans docker-compose.yml
+        use_pure=False,
+    )
+    # Récupérer les données envoyées depuis React
+    data = request.json
+    # TODO support profile pictures
+    email = data.get("email")
+    password = data.get("password")
+    # confirmPassword = data.get("confirmPassword")
+    name = data.get("name")
+    lastName = data.get("lastName")
+    city = data.get("city")
+    country = data.get("country")
+    zipcode = data.get("zipcode")
+    description = data.get("description")
+    birthdate = data.get("birthdate")
+    title = data.get("title")
+    contactInformations = data.get("contactInformations")
+    savedAdsIds = 1
+    username = data.get("username")
+    # xxx = data.get("xxx")
+
+    # Vérifier que les informations sont présentes
+    if (
+        not email
+        or not password
+        or not name
+        or not lastName
+        or not city
+        or not country
+        or not zipcode
+        or not description
+        or not birthdate
+        or not title
+        or not contactInformations
+        or not savedAdsIds
+        or not username
+    ):
+        return jsonify({"error": "Please provide every info."}), 400
+
+    # Vérifier si l'utilisateur existe déjà dans la base de données
+    check_query = "SELECT * FROM users WHERE email = %s"
+    cursor = cnx.cursor(dictionary=True)
+    cursor.execute(check_query, (email,))
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        return jsonify({"error": "This email is already used."}), 409
+
+    # TODO try if this works
+    # Vérifier si le nom d'utilisateur existe déjà
+    check_query = "SELECT * FROM users WHERE username = %s"
+    cursor.execute(check_query, (username,))
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        return jsonify({"error": "This username is already used."}), 409
+
+    # Hacher le mot de passe avant de l'enregistrer dans la base de données
+    hashed_password = hash_password(password)
+
+    # Génération du token JWT
+    payload_data = {
+        "sub": email,  # Utilisation de l'email comme identifiant du souscripteur
+        "name": name,
+        "nickname": username,
+    }
+
+    my_secret = "rachidleplusbeau"
+    token = jwt.encode(payload=payload_data, key=my_secret)
+
+    # Insérer le nouvel utilisateur dans la base de données avec le token
+    insert_query = """
+        INSERT INTO `users` (`id`, `email`, `password`, `name`, `lastName`, `city`, `country`, `zipcode`, `description`, `birthdate`, `title`, `contactInformations`, `savedAdsIds`, `username`, `token`)
+        VALUES (NULL, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    try:
+        cursor.execute(
+            insert_query,
+            (
+                email,
+                hashed_password.decode("utf-8"),  # Stocker le hash en tant que string
+                name,
+                lastName,
+                city,
+                country,
+                zipcode,
+                description,
+                birthdate,
+                title,
+                contactInformations,
+                savedAdsIds,
+                username,
+                token,  # Stocker le token dans la base de données
+            ),
+        )
+        cnx.commit()  # Confirmer l'insertion
+
+        # Retourner les informations de l'utilisateur avec le token
+
+        query = "SELECT * FROM users WHERE token = %s"
+        cursor = cnx.cursor(dictionary=True)
+        cursor.execute(query, (token,))
+        user = cursor.fetchone()
+        return (
+            jsonify({"message": "Success Signup!", "token": token, "user": user}),
+            201,
+        )
+    except mysql.connector.Error as err:
+        print(f"An error occurred while accessing the DB: {err}")
+        cnx.rollback()  # Annuler l'insertion si une erreur survient
+        return jsonify({"error": "An error occurred on Signup."}), 500
+    finally:
+        cursor.close()
+
+
+# Route to create a new publisher
+@app.route("/api/publishers", methods=["POST"])
+def create_publisher():
+    cnx = mysql.connector.connect(
+        user="root",
+        password="root_password",
+        host="db",
+        database="JustDoItDB",
+        use_pure=False,
+    )
+    data = request.json
+    cursor = cnx.cursor()
+
+    insert_query = """
+        INSERT INTO publishers (name, title, place, contactInformations, lastLoginDate, signupDate)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """
+    cursor.execute(
+        insert_query,
+        (
+            data.get("name"),
+            data.get("title"),
+            data.get("place"),
+            data.get("contactInformations"),
+            data.get("lastLoginDate"),
+            data.get("signupDate"),
+        ),
+    )
+    cnx.commit()
+    return jsonify({"message": "Publisher created successfully!"}), 201
+
+
+# Route to create a new ad
+@app.route("/api/ads", methods=["POST"])
+def create_ad():
+    cnx = mysql.connector.connect(
+        user="root",
+        password="root_password",
+        host="db",
+        database="JustDoItDB",
+        use_pure=False,
+    )
+    data = request.json
+    cursor = cnx.cursor()
+
+    insert_query = """
+        INSERT INTO ads (title, wages, description, contactInformations, contractType, place, workingSchedules, publicationDate, categories)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    cursor.execute(
+        insert_query,
+        (
+            data.get("title"),
+            data.get("wages"),
+            data.get("description"),
+            data.get("contactInformations"),
+            data.get("contractType"),
+            data.get("place"),
+            data.get("workingSchedules"),
+            data.get("publicationDate"),
+            data.get("categories"),
+        ),
+    )
+    cnx.commit()
+    return jsonify({"message": "Ad created successfully!"}), 201
+
+
+# Route to create a new application
+@app.route("/api/apply", methods=["POST"])
+def create_application():
+    cnx = mysql.connector.connect(
+        user="root",
+        password="root_password",
+        host="db",
+        database="JustDoItDB",
+        use_pure=False,
+    )
+    data = request.json
+    cursor = cnx.cursor()
+
+    insert_query = """
+        INSERT INTO applications (adId, publisherId, userId, name, lastName, email, phoneNumber, city, country, zipcode, message, resume)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """
+    cursor.execute(
+        insert_query,
+        (
+            data.get("adId"),
+            data.get("publisherId"),
+            data.get("userId"),
+            data.get("name"),
+            data.get("lastName"),
+            data.get("email"),
+            data.get("phoneNumber"),
+            data.get("city"),
+            data.get("country"),
+            data.get("zipcode"),
+            data.get("message"),
+            data.get("resume"),
+        ),
+    )
+    cnx.commit()
+    return jsonify({"message": "Application created successfully!"}), 201
+
+
+# Route to create a new admin user
+@app.route("/api/admins", methods=["POST"])
+def create_admin_user():
+    cnx = mysql.connector.connect(
+        user="root",
+        password="root_password",
+        host="db",
+        database="JustDoItDB",
+        use_pure=False,
+    )
+    data = request.json
+    cursor = cnx.cursor()
+
+    insert_query = """
+        INSERT INTO adminUsers (email)
+        VALUES (%s)
+    """
+    cursor.execute(insert_query, (data.get("email"),))
+    cnx.commit()
+    return jsonify({"message": "Admin user created successfully!"}), 201
 
 
 @app.route("/api/healthcheck", methods=["GET"])
