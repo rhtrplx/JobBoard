@@ -5,6 +5,7 @@ import logo from "../assets/Logo.png";
 import './Style.css';
 import { Link } from 'react-router-dom';
 import NavigationHeader from '../components/Header';
+import CreateAccount from '../components/CreateAccount';
 
 function FrontPage() {
   const [email, setEmail] = useState("");
@@ -94,14 +95,9 @@ function FrontPage() {
             />
           </div>
 
-          <SubmitButton handleSubmit={handleSubmit} />
-          <br /> <br />
-
-          <Link to="/create">
-            <button id="CreateAccount">
-              Create an Account
-            </button>
-          </Link>
+          <SubmitButton handleSubmit={handleSubmit} /><br />
+          <CreateAccount/>
+          <br /> <br /> 
         </form>
       </div>
     </div>

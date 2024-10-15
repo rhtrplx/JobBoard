@@ -187,7 +187,13 @@ function ApplicationForm() {
               <input className="form-control" type="file" id="formFile" onChange={handleFileChange} />
             </div>
             <div className="d-flex justify-content-center">
-              <button type="submit" className='btn' style={{ backgroundColor: '#1178be', color: 'white' }} disabled={loading}>Submit Application</button>
+              <button 
+                type="submit" 
+                className='submit-button' 
+                disabled={loading}
+              >
+                Submit Application
+              </button>
             </div>
           </form>
           {loading && <p className="text-muted">Fetching user data...</p>}

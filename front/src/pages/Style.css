@@ -92,16 +92,6 @@ text-decoration: none;
 }
      
 
-#CreateAccount{
-    background-color: #1178be
-    ;
-    border-color: #1178be
-    ;
-    color: white;
-    height: 37px;
-    border-radius: 5px;
-}
-
 .Save{
     background-color: 	#cee6fa;
     border-color: #6babe0;
@@ -126,6 +116,27 @@ text-decoration: none;
 .ApplyNow:hover {
 transform: translateY(-5px); /* Raise button on hover */
 }
+
+
+.submit-button {
+    background-color: #1178be; /* Background color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    padding: 10px 20px; /* Add padding */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor on hover */
+    transition: transform 0.3s ease; /* Smooth transition */
+}
+  
+.submit-button:hover {
+transform: translateY(-5px); /* Raise button on hover */
+}
+  
+.submit-button:disabled {
+background-color: #a3c5d7; /* Lighter color when disabled */
+cursor: not-allowed; /* Change cursor to indicate disabled state */
+}
+  
   
 
 
@@ -162,6 +173,22 @@ transform: translateY(-5px); /* Raise button on hover */
     margin: 8px 0px !important;
 }
 
+.create-button {
+    background-color: #1178be; /* Background color */
+    border: none; /* No border */
+    color: white; /* Text color */
+    padding: 10px 20px; /* Add padding */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor on hover */
+    transition: transform 0.3s ease; /* Smooth transition */
+    margin-top: 15px;
+  }
+  
+.create-button:hover {
+    transform: translateY(-5px); /* Raise button on hover */
+}
+
+
          
   
 .custom-button {
@@ -184,12 +211,6 @@ color: #fff;
 text-decoration: none;
 }
  
-
-/* CREATEACCOUNT PAGE */
-
-.custom-width {
-    width: 20% !important;
-  }
 
 
 /* PROFILE */
