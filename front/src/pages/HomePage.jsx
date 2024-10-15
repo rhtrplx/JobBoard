@@ -10,12 +10,19 @@ function HomePage() {
   const [expanded, setExpanded] = useState(null);
   const [ads, setAds] = useState([]);
   const [page, setPage] = useState(0);
+  const [adDetails, setAdDetails] = useState({}); // To hold additional details for the selected ad
   const navigate = useNavigate();
   
   const isAuthenticated = localStorage.getItem('user'); // Example check for authentication
 
-  const toggleExpand = (id) => {
-    setExpanded(expanded === id ? null : id);
+  const toggleExpand = async (id) => {
+    if (expanded === id) {
+      setExpanded(null);
+      setAdDetails({}); // Clear details if collapsing
+    } else {
+      setExpanded(id);
+      await fetchAdDetails(id); // Fetch details when expanding
+    }
   };
 
   const fetchAds = async () => {
@@ -37,6 +44,22 @@ function HomePage() {
     } catch (error) {
       console.error("Failed to fetch ads:", error);
       alert("Failed to fetch ads. Please try again later.");
+    }
+  };
+
+  const fetchAdDetails = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5001/api/ads/${id}`); // Assuming this endpoint fetches details for a specific ad
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setAdDetails(data); // Update state with the fetched details
+    } catch (error) {
+      console.error("Failed to fetch ad details:", error);
+      alert("Failed to fetch ad details. Please try again later.");
     }
   };
 
@@ -90,15 +113,15 @@ function HomePage() {
 
                   {/* Collapsible content for additional details */}
                   <div className={`collapsible ${expanded === ad.id ? 'open' : ''}`}>
-                    {expanded === ad.id && (
+                    {expanded === ad.id && adDetails.id === ad.id && ( // Ensure details correspond to the expanded ad
                       <div className="mt-3">
-                        <p>{ad.place}</p>
-                        <p>{ad.wages}</p>
-                        <p>{ad.workingSchedules}</p>
-                        <p>{ad.publicationDate}</p>
+                        <p>{adDetails.place}</p>
+                        <p>{adDetails.wages}</p>
+                        <p>{adDetails.workingSchedules}</p>
+                        <p>{adDetails.publicationDate}</p>
 
                         {/* Pass ad data to ApplyNowButton */}
-                        <ApplyNowButton jobData={ad} />
+                        <ApplyNowButton jobData={adDetails} />
                         <button className='Save'>Save</button>
                       </div>
                     )}
