@@ -143,6 +143,9 @@ API's routes:
 ### Gets Specific Ad (GET):
     localhost:5001/api/ads/5
 - sent body: 
+```json
+{}
+```
 
 - received:
 
@@ -164,6 +167,9 @@ API's routes:
 ### Gets All Users (GET):
     localhost:5001/api/users
 - sent body: 
+```json
+{}
+```
 
 - received:
 
@@ -275,6 +281,9 @@ API's routes:
 ### Get All Admins (GET):
     localhost:5001/api/admins
 - sent body: 
+```json
+{}
+```
 
 - received:
 
