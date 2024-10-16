@@ -7,7 +7,7 @@ function LogoutButton() {
   const handleLogout = () => {
     localStorage.removeItem('token'); // Remove the token from localStorage
     localStorage.removeItem('user'); 
-    navigate("/"); // Redirect to the login page
+    navigate("/login"); // Redirect to the login page
     alert('loggedout!')
   };
 
