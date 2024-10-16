@@ -1,7 +1,7 @@
 # JobBoard
 JobBoard is a simple that makes possible to ...
 
-## How to setup:
+## How to deploy this project:
 ### 1. Downlaod and extract the project:
 - Downlaod link: https://github.com/rhtrplx/JobBoard/archive/refs/heads/main.zip
 ### 1. Install Docker:
@@ -18,21 +18,21 @@ or
     
     docker-compose -f docker-compose.yml up -d
 
-## Running services
-Website: http://localhost:3000
+## Services' UI
+JobBoard: http://localhost:3000
 
-Phpmyadmin http://localhost:8080
+PhpMyAdmin http://localhost:8080
 
-## Our Api
-Api's routes:
+## Our API
+API's routes:
 
 ### Login (POST):
     localhost:5001/api/login
 - sent body: 
 ```json
 {
-    "email": "rachid@example.com",
-    "password": "hashed_password1"
+    "email": "admin@admin.com",
+    "password": "admin123"
 }
 ```
 
@@ -44,18 +44,20 @@ Api's routes:
     "user": {
         "birthdate": "Thu, 03 Jan 2002 00:00:00 GMT",
         "city": "Nice",
-        "contactInformations": "rachid.pro@techcompany.com",
-        "country": "Île-de-France",
-        "description": "Passionné de technologie et développeur expérimenté.",
-        "email": "rachid@example.com",
-        "id": 10,
-        "lastName": "Lamkadem",
-        "name": "Rachid",
-        "password": "hashed_password1",
-        "savedAdsIds": "1,2,3",
-        "title": "Développeur Backend",
-        "username": "rachidPro06",
-        "zipcode": "06"
+        "contactInformations": "admin.contact@admin.com",
+        "country": "France",
+        "description": "Admin Description",
+        "email": "admin@admin.com",
+        "id": 21,
+        "isAdmin": true,
+        "lastName": "admin",
+        "name": "admin",
+        "password": "$2b$12$KEAuFViqlZx71rHoMAL.BO1gxFgAa8t5HLQa4f.lny677Pfukv.CC",
+        "savedAdsIds": "1",
+        "title": "AdminTitle",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIxLCJuYW1lIjoiYWRtaW4iLCJuaWNrbmFtZSI6IkFkbWluVXNlck5hbWUwNiIsImlzQWRtaW4iOnRydWV9.-Qlm6Iub4mdPn0PsVNkLlk8GLWl3JpDhpiAOhVQuM3E",
+        "username": "AdminUserName06",
+        "zipcode": "06000"
     }
 }
 ```
@@ -85,11 +87,29 @@ Api's routes:
 
 ```json
 {
-    "message": "Success Signup !"
+    "message": "Success Signup!",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyYWNoaWRAZXhhbXBsZS5jb20iLCJuYW1lIjoiUmFjaGlkIiwibmlja25hbWUiOiJyYWNoaWRQcm8wNiJ9.I_pNxf3w_VFhmhlMB6l2koPPtzZfjYOOHk9EsFcUfvY",
+    "user": {
+        "birthdate": "Thu, 03 Jan 2002 00:00:00 GMT",
+        "city": "Nice",
+        "contactInformations": "rachid.pro@techcompany.com",
+        "country": "Île-de-France",
+        "description": "Passionné de technologie et développeur expérimenté.",
+        "email": "rachid@example.com",
+        "id": 28,
+        "lastName": "Lamkadem",
+        "name": "Rachid",
+        "password": "$2b$12$LdkQJMEtjAuWLDuwA71LreQaEO1wVvJjzrVVWfWWUuy6C0KsaeptS",
+        "savedAdsIds": "1",
+        "title": "Développeur Backend",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyYWNoaWRAZXhhbXBsZS5jb20iLCJuYW1lIjoiUmFjaGlkIiwibmlja25hbWUiOiJyYWNoaWRQcm8wNiJ9.I_pNxf3w_VFhmhlMB6l2koPPtzZfjYOOHk9EsFcUfvY",
+        "username": "rachidPro06",
+        "zipcode": "06"
+    }
 }
 ```
 
-### Gets Ads (POST):
+### Gets Ads (GET):
     localhost:5001/api/ads
 - sent body: 
 ```json
@@ -115,24 +135,164 @@ Api's routes:
             "wages": "45 000 € / an",
             "workingSchedules": "Lundi à Vendredi, 10h-19h"
         },
-        {
-            "categories": "",
-            "contactInformations": "com@entrepriserh.com",
-            "contractType": "CDD",
-            "description": "Développer des supports de communication interne et externe.",
-            "id": 31,
-            "place": "Bordeaux, France",
-            "publicationDate": "Thu, 19 Sep 2024 00:00:00 GMT",
-            "title": "Chargé de Communication",
-            "wages": "40 000 € / an",
-            "workingSchedules": "Lundi à Vendredi, 9h-18h"
-        },
         ...
     ]
 }
 ```
 
-### Apply to an ad (POST):
+### Gets Specific Ad (GET):
+    localhost:5001/api/ads/5
+- sent body: 
+
+- received:
+
+```json
+{
+    "categories": "1",
+    "contactInformations": "security@consultingfirm.com",
+    "contractType": "CDI",
+    "description": "Consultant en cybersécurité recherché pour effectuer des audits et mettre en place des solutions de sécurité.",
+    "id": 5,
+    "place": "Bordeaux, France",
+    "publicationDate": "Tue, 08 Oct 2024 00:00:00 GMT",
+    "title": "Consultant en Cybersécurité",
+    "wages": "55 000 € par an",
+    "workingSchedules": "Lundi à Vendredi, 10h - 19h"
+}
+```
+
+### Gets All Users (GET):
+    localhost:5001/api/users
+- sent body: 
+
+- received:
+
+```json
+{
+    "users": [
+        {
+            "birthdate": "Thu, 03 Jan 2002 00:00:00 GMT",
+            "city": "Nice",
+            "contactInformations": "admin.contact@admin.com",
+            "country": "France",
+            "description": "Admin Description",
+            "email": "admin@admin.com",
+            "id": 21,
+            "lastName": "admin",
+            "name": "admin",
+            "title": "AdminTitle",
+            "username": "AdminUserName06",
+            "zipcode": "06000"
+        },
+        {
+            "birthdate": "Thu, 03 Jan 2002 00:00:00 GMT",
+            "city": "rachid",
+            "contactInformations": "rachid",
+            "country": "rachid",
+            "description": "rachid",
+            "email": "rachid@rachid.com",
+            "id": 22,
+            "lastName": "rachid",
+            "name": "rachid",
+            "title": "rachid",
+            "username": "rachid",
+            "zipcode": "123"
+        },
+        {
+            "birthdate": "Sat, 31 Dec 1222 00:00:00 GMT",
+            "city": "aze",
+            "contactInformations": "aze",
+            "country": "aze",
+            "description": "&é\"",
+            "email": "john.doe@example.com",
+            "id": 24,
+            "lastName": "rachid",
+            "name": "rachid",
+            "title": "&é\"",
+            "username": "&é\"",
+            "zipcode": "123"
+        },
+        {
+            "birthdate": "Wed, 02 Oct 2024 00:00:00 GMT",
+            "city": "nice",
+            "contactInformations": "rachid@contact.com",
+            "country": "france",
+            "description": "azeazeaze",
+            "email": "rachid@okoko.jhug",
+            "id": 25,
+            "lastName": "rachid",
+            "name": "rachid",
+            "title": "azeazea",
+            "username": "rachidName123",
+            "zipcode": "06000"
+        },
+        {
+            "birthdate": "Tue, 15 Oct 2024 00:00:00 GMT",
+            "city": "nice",
+            "contactInformations": "rachid",
+            "country": "france",
+            "description": "rachid",
+            "email": "rachid@qsd",
+            "id": 26,
+            "lastName": "rachid",
+            "name": "rachid",
+            "title": "rachid",
+            "username": "rachid123",
+            "zipcode": "06000"
+        },
+        {
+            "birthdate": "Thu, 03 Jan 2002 00:00:00 GMT",
+            "city": "Nice",
+            "contactInformations": "melody.pro@techcompany.com",
+            "country": "Île-de-France",
+            "description": "Passionné de technologie et développeur expérimenté.",
+            "email": "racjid@qsdqsnvdfqshdsqh.com",
+            "id": 27,
+            "lastName": "Paras",
+            "name": "Melody",
+            "title": "Développeur Backend",
+            "username": "melodyPro060606",
+            "zipcode": "06000"
+        },
+        {
+            "birthdate": "Thu, 03 Jan 2002 00:00:00 GMT",
+            "city": "Nice",
+            "contactInformations": "rachid.pro@techcompany.com",
+            "country": "Île-de-France",
+            "description": "Passionné de technologie et développeur expérimenté.",
+            "email": "rachid@example.com",
+            "id": 28,
+            "lastName": "Lamkadem",
+            "name": "Rachid",
+            "title": "Développeur Backend",
+            "username": "rachidPro06",
+            "zipcode": "06"
+        }
+    ]
+}
+```
+
+### Get All Admins (GET):
+    localhost:5001/api/admins
+- sent body: 
+
+- received:
+
+```json
+{
+    "admins": [
+        {
+            "email": "admin@admin.com",
+            "id": 3
+        },
+        {
+            "email": "rachid@rachid.com",
+            "id": 4
+        }
+    ]
+}
+```
+### Apply To An Ad (POST):
     localhost:5001/api/apply
 - sent body: 
 ```json
@@ -157,5 +317,94 @@ Api's routes:
 ```json
 {
     "message": "Success created the application."
+}
+```
+
+### Update An Account (PUT):
+    localhost:5001/api/apply
+- sent body: 
+```json
+{
+    "email": "racjid@qsdqsnvdfqshdsqh.com",
+    "password": "password",
+    "name": "Melody",
+    "lastName": "Paras",
+    "city": "Nice",
+    "country": "Île-de-France",
+    "zipcode": "06000",
+    "description": "Passionné de technologie et développeur expérimenté.",
+    "birthdate": "2002-01-03",
+    "title": "Développeur Backend",
+    "contactInformations": "melody.pro@techcompany.com",
+    "savedAdsIds": "1,2,3",
+    "username": "melodyPro060606"
+}
+```
+
+- received:
+
+```json
+{
+    "message": "Account updated successfully!"
+}
+```
+
+### Delete An Account (DELETE):
+    localhost:5001/api/users/1
+- sent body: 
+```json
+{}
+```
+
+- received:
+
+```json
+{
+    "message": "User deleted successfully!"
+}
+```
+
+### Delete An Admin (DELETE):
+    localhost:5001/api/admins/1
+- sent body: 
+```json
+{}
+```
+
+- received:
+
+```json
+{
+    "message": "Admin deleted successfully!"
+}
+```
+
+### Delete An Ad (DELETE):
+    localhost:5001/api/ads/1
+- sent body: 
+```json
+{}
+```
+
+- received:
+
+```json
+{
+    "message": "Ad deleted successfully!"
+}
+```
+
+### Delete A Publisher (DELETE):
+    localhost:5001/api/publishers/1
+- sent body: 
+```json
+{}
+```
+
+- received:
+
+```json
+{
+    "message": "Publisher deleted successfully!"
 }
 ```
