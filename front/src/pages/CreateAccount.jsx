@@ -116,16 +116,15 @@ function CreateAccount() {
             <div className="form-group">
               <label htmlFor="email" className="form-label">Email</label>
               <input
-                  type="email"
-                  className="form-control custom-input"
-                  id="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$"
-                  title="Please enter a valid email address (e.g., username@example.com)."
-                  required
-                />
-
+                type="email"
+                className="form-control custom-input"
+                id="email"
+                value={formData.email}
+                onChange={handleChange}
+                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,63}$"
+                title="Please enter a valid email address in the format username@domain.tld (e.g., john@company.org)."
+                required
+              />
             </div>
             <div className="form-group">
               <label htmlFor="password" className="form-label">Password</label>
@@ -137,7 +136,7 @@ function CreateAccount() {
             </div>
             <div className="form-group">
               <label htmlFor="username" className="form-label">User Name</label>
-              <input type="text" className="form-control custom-input" id="username" placeholder="Expert in Cybersecurity" value={formData.username} onChange={handleChange} />
+              <input type="text" className="form-control custom-input" id="username" placeholder="Example01" value={formData.username} onChange={handleChange} />
             </div>
           </div>
 
