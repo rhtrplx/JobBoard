@@ -131,9 +131,6 @@ function CreateAccount() {
                 id="email"
                 value={formData.email}
                 onChange={handleChange}
-                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,63}$"
-                title="Please enter a valid email address in the format username@domain.tld (e.g., john@company.org)."
-                required
               />
             </div>
             <div className="form-group">
