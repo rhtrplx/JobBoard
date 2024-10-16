@@ -77,13 +77,13 @@ function ProfilePage() {
                             <h5 className="card-title d-flex justify-content-center align-items-center">{`${userData.name}`}</h5>
                             <h5 className="card-title d-flex justify-content-center align-items-center">{`${userData.title}`}</h5>
                             <p className="card-text d-flex justify-content-center align-items-center">
-                                {userData.name || "..."}.
+                                Hi! my name is {userData.name || "..."}.
                             </p>
                             <p className="card-text d-flex justify-content-center align-items-center">
-                                {userData.description || "..."}.
+                               Description: {userData.description || "..."}.
                             </p>
                             <p className="card-text d-flex justify-content-center align-items-center">
-                                {userData.email || "..."}.
+                                You can contact me at : {userData.email || "..."}.
                             </p>
                         </div>
                     </div>
