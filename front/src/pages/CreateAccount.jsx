@@ -49,6 +49,16 @@ function CreateAccount() {
     }
 
     // Check if the password is valid
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,63}$/;
+    if (!emailPattern.test(formData.email)) {
+      setAlertMessage('Please enter a valid email address.');
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+      return;
+    }
+
     if (!validatePassword(formData.password)) {
       setAlertMessage('Password must be at least 8 characters long and contain at least one letter and one number.');
       setShowAlert(true);
