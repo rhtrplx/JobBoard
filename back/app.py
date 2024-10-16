@@ -159,13 +159,7 @@ def update_ad(id):
 
 @app.route("/api/ads/<int:id>", methods=["GET"])
 def get_ad(id):
-    cnx = mysql.connector.connect(
-        user="root",  # MySQL username
-        password="root_password",  # MySQL password
-        host="127.0.0.1",  # Use 'db' or 'localhost' to connect from the host
-        database="JustDoItDB",  # Database name specified in docker-compose.yml
-        use_pure=False,
-    )
+    cnx = connectToDb()
     cursor = cnx.cursor(dictionary=True)
 
     # SQL query to fetch ad details by id
@@ -580,13 +574,7 @@ def update_account_handler():
 # Route to handle both fetching ads (GET) and creating a new ad (POST)
 @app.route("/api/ads", methods=["GET", "POST"])
 def ads_handler():
-    cnx = mysql.connector.connect(
-        user="root",  # MySQL username specified in docker-compose.yml
-        password="root_password",  # MySQL password specified in docker-compose.yml
-        host="127.0.0.1",  # Use 'db' or 'localhost' to connect from the host
-        database="JustDoItDB",  # Database name specified in docker-compose.yml
-        use_pure=False,
-    )
+    cnx = connectToDb()
     cursor = cnx.cursor(dictionary=True)
 
     # Handle GET request: Fetch ads with pagination
@@ -866,13 +854,7 @@ def create_user():
 # Route to create a new publisher
 @app.route("/api/publishers", methods=["POST"])
 def create_publisher():
-    cnx = mysql.connector.connect(
-        user="root",
-        password="root_password",
-        host="127.0.0.1",
-        database="JustDoItDB",
-        use_pure=False,
-    )
+    cnx = connectToDb()
     data = request.json
     cursor = cnx.cursor()
 
@@ -898,13 +880,7 @@ def create_publisher():
 # Route to create a new application
 @app.route("/api/apply", methods=["POST"])
 def create_application():
-    cnx = mysql.connector.connect(
-        user="root",
-        password="root_password",
-        host="db",
-        database="JustDoItDB",
-        use_pure=False,
-    )
+    cnx = connectToDb()
     data = request.json
     cursor = cnx.cursor()
 
@@ -936,13 +912,7 @@ def create_application():
 # Route to create a new admin user
 @app.route("/api/admins", methods=["POST"])
 def create_admin_user():
-    cnx = mysql.connector.connect(
-        user="root",
-        password="root_password",
-        host="db",
-        database="JustDoItDB",
-        use_pure=False,
-    )
+    cnx = connectToDb()
     data = request.json
     cursor = cnx.cursor()
 
