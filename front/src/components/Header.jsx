@@ -28,7 +28,7 @@ const NavigationHeader = ({ loggedInUser }) => {
     setShowAlert(true);
     setTimeout(() => {
       setShowAlert(false);
-      navigate('/');
+      navigate('/login');
     }, 1000);
   };
 
