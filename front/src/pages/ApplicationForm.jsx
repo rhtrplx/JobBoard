@@ -132,7 +132,7 @@ function ApplicationForm() {
   };
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid" >
       <NavigationHeader />
       <div className="row">
         {/* Job Information Column */}

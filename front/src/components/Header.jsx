@@ -46,6 +46,7 @@ const NavigationHeader = ({ loggedInUser }) => {
         className="navbar navbar-expand-lg" style={{
           backgroundColor: '#faf8f6',
           boxShadow: '0 2px 4px	#98aeb6',
+          marginBottom:'15px',
         }}
         >
 
