@@ -1,13 +1,3 @@
-
-.profilecard {
-    transition: none; /* Disable transition effects */
-}
-
-.profilecard:hover {
-    box-shadow: none; /* Remove the shadow on hover */
-    background-color: inherit; /* Prevent background color change on hover */
-}
-
 .card {
     transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for transform, background color, and shadow */
 }

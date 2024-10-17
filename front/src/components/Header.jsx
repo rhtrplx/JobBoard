@@ -42,7 +42,13 @@ const NavigationHeader = ({ loggedInUser }) => {
 
   return (
     <>
-      <nav className="navbar navbar-expand-lg">
+      <nav
+        className="navbar navbar-expand-lg" style={{
+          backgroundColor: '#faf8f6',
+          boxShadow: '0 2px 4px	#98aeb6',
+        }}
+        >
+
         <div className="container-fluid d-flex justify-content-between align-items-center">
           <div className="logo-container mx-auto">
             <img

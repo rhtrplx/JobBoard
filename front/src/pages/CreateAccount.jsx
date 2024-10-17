@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from "../assets/Logo.png";
 import './Style.css';
 import NavigationHeader from '../components/Header';
 
