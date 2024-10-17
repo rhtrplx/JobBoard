@@ -925,6 +925,44 @@ def create_admin_user():
     return jsonify({"message": "Admin user created successfully!"}), 201
 
 
+# Route to update an existing admin user's email
+@app.route("/api/admins/<int:id>", methods=["PUT"])
+def update_admin_user(id):
+    cnx = connectToDb()
+    data = request.json
+    cursor = cnx.cursor()
+
+    # Vérifier que l'email est fourni dans la requête
+    new_email = data.get("email")
+    if not new_email:
+        return jsonify({"error": "Email is required."}), 400
+
+    # Vérifier si l'admin avec l'ID existe
+    check_query = "SELECT * FROM adminUsers WHERE id = %s"
+    cursor.execute(check_query, (id,))
+    existing_admin = cursor.fetchone()
+
+    if not existing_admin:
+        return jsonify({"error": "Admin user not found."}), 404
+
+    # Mettre à jour l'email de l'admin
+    update_query = """
+        UPDATE adminUsers
+        SET email = %s
+        WHERE id = %s
+    """
+    try:
+        cursor.execute(update_query, (new_email, id))
+        cnx.commit()
+        return jsonify({"message": "Admin user's email updated successfully!"}), 200
+    except mysql.connector.Error as err:
+        print(f"An error occurred while updating the admin: {err}")
+        cnx.rollback()  # Annuler les modifications en cas d'erreur
+        return jsonify({"error": "An error occurred during the update."}), 500
+    finally:
+        cursor.close()
+
+
 @app.route("/api/healthcheck", methods=["GET"])
 def healthcheck_handler():
     return "OK", 200
