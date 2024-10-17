@@ -81,11 +81,11 @@ function HomePage() {
   }, [isAuthenticated]);
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid" style={{ padding: '0'}}>
       <NavigationHeader />
 
-      <div className="row" style={{ minHeight: '80vh' }}>
-        <nav className="col-md-3 bg-white text-black p-4">
+      <div className="row" style={{ minHeight: '90vh'}}>
+        <nav className="col-md-3 text-black p-5">
           <h2>Filters</h2>
           <div>
             <input type="text" />
@@ -100,7 +100,7 @@ function HomePage() {
           </div>
         </nav>
 
-        <main className="col-md-9 bg-white text-black p-4" style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+        <main className="col-md-9 text-black p-5" style={{ maxHeight: '90vh', overflowY: 'auto'}}>
           <h2>Jobs</h2>
 
           {/* Job Cards based on fetched ads */}
