@@ -81,7 +81,7 @@ function HomePage() {
   }, [isAuthenticated]);
 
   return (
-    <div className="container-fluid">
+    <div>
       <NavigationHeader />
 
       <div className="row" style={{ minHeight: '90vh'}}>

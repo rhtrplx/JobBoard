@@ -67,9 +67,9 @@ function ProfilePage() {
     }
 
     return (
-        <div className="container-fluid">
+        <div>
             <NavigationHeader />
-            <div className="row">
+            <div className="row" style={{padding:'25px'}}>
                 <div className="col-md-4">
                     <div className="card profilecard d-flex justify-content-center align-items-center mb-3" style={{ height: '100%', borderStyle: 'dotted' }}>
                         <img src={ProfilePhoto} className="card-img-center" alt="Profile Logo" style={{ width: '200px', height: '200px', objectFit: 'cover' }} />

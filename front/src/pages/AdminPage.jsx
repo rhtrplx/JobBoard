@@ -259,7 +259,7 @@ function AdminPage() {
         <div>
             <NavigationHeader />
 
-            <ul className="nav nav-tabs" style={{ fontSize: '20px', fontWeight: '10px' }}>
+            <ul className="nav nav-tabs" style={{ fontSize: '20px', fontWeight: '10px', padding:'25px' }}>
                 <li className="nav-item">
                     <a
                         className={`nav-link ${activeTab === 'users' ? 'active' : ''}`}
@@ -302,13 +302,13 @@ function AdminPage() {
                 </li>
             </ul>
 
-            <div className="d-flex justify-content-end mt-3">
+            <div className="d-flex justify-content-end mt-3"  style={{margin:'25px' }}>
                 <button className="btn btn-success" onClick={handleAddClick}>
                     Add New Item
                 </button>
             </div>
 
-            <div className="tab-content mt-3">
+            <div className="tab-content mt-3" style={{padding:'25px' }}>
                 {activeTab === 'users' && renderTable(
                     users,
                     ['ID', 'Name', 'Last Name', 'Email', 'City', 'Country', 'Zipcode', 'Description', 'Birthdate', 'Title', 'Contact Information', 'Username'],

@@ -66,12 +66,12 @@ function FrontPage() {
   };
 
   return (
-    <div className="container-fluid">
+    <div>
       {/* Navbar with Logo */}
       <NavigationHeader />
 
       {/* Form */}
-      <div className="d-flex justify-content-center align-items-top min-vh-100">
+      <div className="d-flex justify-content-center align-items-top min-vh-100" style={{ marginTop:'50px'}}>
         <form className="w-50" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="InputEmail1" className="form-label">Email address</label>

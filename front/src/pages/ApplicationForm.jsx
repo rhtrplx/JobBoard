@@ -132,9 +132,9 @@ function ApplicationForm() {
   };
 
   return (
-    <div className="container-fluid" >
+    <div>
       <NavigationHeader />
-      <div className="row">
+      <div className="row" style={{padding:'25px'}}>
         {/* Job Information Column */}
         <div className="col-12 col-md-6 order-md-2">
           {jobData ? (
