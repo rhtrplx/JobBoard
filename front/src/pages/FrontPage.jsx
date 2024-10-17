@@ -71,7 +71,7 @@ function FrontPage() {
       <NavigationHeader />
 
       {/* Form */}
-      <div className="d-flex justify-content-center align-items-top min-vh-100" style={{ marginTop:'50px'}}>
+      <div className="d-flex justify-content-center align-items-top min-vh-90" style={{ marginTop:'50px'}}>
         <form className="w-50" onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="InputEmail1" className="form-label">Email address</label>
