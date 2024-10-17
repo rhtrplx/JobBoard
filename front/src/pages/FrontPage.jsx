@@ -66,7 +66,7 @@ function FrontPage() {
   };
 
   return (
-    <div>
+    <div className="container-fluid">
       {/* Navbar with Logo */}
       <NavigationHeader />
 
