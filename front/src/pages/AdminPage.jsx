@@ -343,7 +343,6 @@ function AdminPage() {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">{isEditMode ? 'Edit Item' : 'Add New Item'}</h5>
-                                <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
                             </div>
                             <div className="modal-body">
                                 {Object.keys(formData).map((key) => (
