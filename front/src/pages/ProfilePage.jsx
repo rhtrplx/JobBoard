@@ -40,6 +40,7 @@ function ProfilePage() {
 
                 const data = await response.json();
                 console.log(data)
+                
                 setUserData({
                     name: data.user.name || '',
                     lastname: data.user.lastname || '',

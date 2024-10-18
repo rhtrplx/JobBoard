@@ -138,7 +138,7 @@ function CreateAccount() {
             </div>
             <div className="form-group">
               <label htmlFor="contactInformations" className="form-label">Contact Information</label>
-              <input type="text" className="form-control custom-input" id="contactInformations" value={formData.contactInformations} onChange={handleChange} />
+              <input type="text" className="form-control custom-input" id="contactInformations" placeholder="Email or Phone Number" value={formData.contactInformations} onChange={handleChange} />
             </div>
             <div className="form-group">
               <label htmlFor="username" className="form-label">User Name</label>
