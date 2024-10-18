@@ -155,10 +155,12 @@ function ApplicationForm() {
 
         {/* Form Column */}
         <div className="col-12 col-md-6 order-md-1">
-          <form className="row g-3" onSubmit={handleApply}>
+        <form className="row g-3" onSubmit={handleApply}>
             {['name', 'lastName', 'email', 'contactInformations', 'city', 'country', 'zipcode'].map((field, index) => (
               <div className="col-md-6" key={index}>
-                <label htmlFor={field} className="form-label">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                <label htmlFor={field} className="form-label">
+                  {field === 'contactInformations' ? 'Contact Information' : field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
                 <input
                   type="text"
                   className="form-control"
@@ -166,7 +168,7 @@ function ApplicationForm() {
                   value={formData[field]}
                   onChange={handleChange}
                   disabled={loading}
-                  placeholder={loading ? 'Loading...' : ''}
+                  placeholder={loading ? 'Loading...' : (field === 'contactInformations' ? 'Email or Phone Number' : '')}
                 />
               </div>
             ))}

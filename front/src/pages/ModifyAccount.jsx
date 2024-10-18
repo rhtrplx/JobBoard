@@ -153,7 +153,7 @@ function ModifyAccount() {
             </div>
             <div className="col-md-6">
               <label htmlFor="contactInformations" className="form-label">Contact Information</label>
-              <input type="text" className="form-control" id="contactInformations" value={formData.contactInformations} onChange={handleChange} />
+              <input type="text" className="form-control" id="contactInformations" placeholder="Email or Phone Number" value={formData.contactInformations} onChange={handleChange} />
             </div>
             <div className="col-md-6">
               <label htmlFor="password" className="form-label">Password</label>
